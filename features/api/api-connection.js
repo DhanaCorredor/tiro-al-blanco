@@ -1,5 +1,6 @@
-const API_KEY = '739a23dd76ebbf7f80d9769fe00f9dc7';
-const WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather';
+// Llamamos a /api/weather (serverless function en Vercel) en vez de
+// OpenWeatherMap directamente — la API key vive en el servidor.
+const WEATHER_URL = '/api/weather';
 const STORED_CITY = 'tiro-weather-city';
 const DEFAULT_CITY = 'Madrid';
 
@@ -27,12 +28,8 @@ obtenerClima({ q: lastCity });
 async function obtenerClima(params) {
   setLoading();
   try {
-    const url = `${WEATHER_URL}?${new URLSearchParams({
-      ...params,
-      appid: API_KEY,
-      units: 'metric',
-      lang: 'es'
-    })}`;
+    // El proxy /api/weather añade `appid`, `units` y `lang` en el servidor.
+    const url = `${WEATHER_URL}?${new URLSearchParams(params)}`;
 
     const respuesta = await fetch(url);
     if (!respuesta.ok) throw new Error('Ciudad no encontrada');
