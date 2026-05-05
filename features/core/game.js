@@ -1,9 +1,13 @@
 // game.js
-import { updateHUD, showGameOver } from '../../views.js';
+import { updateHUD, showGameOver, updateCombo } from '../../views.js';
 import { getLevel } from '../../data/levels.js';
 import { playSound } from '../../Sound/sound.js'; // Importamos el sistema de sonido
-import { saveScore } from './storage.js';
+import { saveScore, getBestScores } from './storage.js';
 import { updateDailyWinnerView } from './score.js';
+
+const GOLDEN_DUCK_CHANCE = 0.15;
+const GOLDEN_DUCK_POINTS = 100;
+const MAX_COMBO_MULTIPLIER = 5;
 
 export const game = {
     score: 0,
@@ -14,6 +18,7 @@ export const game = {
     spawnInterval: null,
     hits: 0,
     shots: 0,
+    combo: 0,
 
     // Iniciar nuevo juego
     startGame(level) {
@@ -26,10 +31,12 @@ export const game = {
         this.score = 0;
         this.hits = 0;
         this.shots = 0;
+        this.combo = 0;
         this.time = levelConfig.time;
 
         this.clearCanvas();
         updateHUD(this.score, this.time);
+        updateCombo(0);
 
         this.startTimer();
         this.spawnDuck();
@@ -76,12 +83,15 @@ export const game = {
         const duck = document.createElement('div');
         duck.className = 'duck';
 
+        const isGolden = Math.random() < GOLDEN_DUCK_CHANCE;
+        if (isGolden) duck.classList.add('golden');
+
         const goRight = Math.random() > 0.5;
         duck.classList.add(goRight ? 'animate-right' : 'animate-left');
         duck.style.left = goRight ? '-70px' : '100%';
 
         const baseSpeed = 5;
-        const speed = baseSpeed / levelConfig.speed;
+        const speed = baseSpeed / (levelConfig.speed * (isGolden ? 1.4 : 1));
         duck.style.animationDuration = `${speed}s`;
 
         const topPos = 20 + Math.random() * 40;
@@ -96,25 +106,43 @@ export const game = {
             e.stopPropagation();
             if (!this.isPlaying) return;
 
-            // --- SONIDO AL ACERTAR ---
             playSound('hit');
+
+            this.combo++;
+            const multiplier = this.combo >= 2
+                ? Math.min(this.combo, MAX_COMBO_MULTIPLIER)
+                : 1;
+            const basePoints = isGolden ? GOLDEN_DUCK_POINTS : levelConfig.pointsPerHit;
+            const points = basePoints * multiplier;
 
             this.hits++;
             this.shots++;
-            this.score += levelConfig.pointsPerHit;
+            this.score += points;
 
             duck.classList.add('hit');
             updateHUD(this.score, this.time);
+            updateCombo(this.combo);
+
+            // Posición del click relativa al canvas
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            spawnScorePopup(canvas, x, y, points);
+            spawnFeathers(canvas, x, y, isGolden ? 10 : 6);
+            triggerShake(canvas);
 
             setTimeout(() => {
                 if (duck.parentNode) duck.remove();
             }, 300);
         });
 
-        // Remover pato al terminar animación
+        // Remover pato al terminar animación (escape sin acierto → rompe combo)
         setTimeout(() => {
             if (duck.parentNode && !duck.classList.contains('hit')) {
                 this.shots++;
+                this.combo = 0;
+                updateCombo(0);
                 duck.remove();
             }
         }, speed * 1000);
@@ -125,16 +153,16 @@ export const game = {
         this.isPlaying = false;
         this.stopIntervals();
 
-        // Guardar puntuación del jugador
-        saveScore(this.currentLevel, this.score);
+        // Comprobar récord ANTES de guardar (saveScore solo guarda si supera)
+        const previousBest = getBestScores()[this.currentLevel]?.score ?? 0;
+        const isRecord = this.score > previousBest && this.score > 0;
 
-        // Actualizar Daily Winner
+        saveScore(this.currentLevel, this.score);
         updateDailyWinnerView();
+        updateCombo(0);
 
         const accuracy = this.shots > 0 ? Math.round((this.hits / this.shots) * 100) : 0;
-
-        showGameOver(this.score, this.hits, accuracy);
-        
+        showGameOver(this.score, this.hits, accuracy, isRecord);
     },
 
     // Pausar el juego
@@ -167,3 +195,41 @@ export const game = {
         }
     }
 };
+
+// === Helpers de "juice" visual ===
+
+function spawnScorePopup(canvas, x, y, points) {
+    const popup = document.createElement('div');
+    popup.className = 'score-popup';
+    popup.textContent = `+${points}`;
+    popup.style.left = `${x}px`;
+    popup.style.top = `${y}px`;
+    canvas.appendChild(popup);
+    setTimeout(() => popup.remove(), 900);
+}
+
+function spawnFeathers(canvas, x, y, count = 6) {
+    for (let i = 0; i < count; i++) {
+        const feather = document.createElement('div');
+        feather.className = 'feather';
+        feather.style.left = `${x}px`;
+        feather.style.top = `${y}px`;
+
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.6;
+        const dist = 35 + Math.random() * 30;
+        feather.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+        feather.style.setProperty('--dy', `${Math.sin(angle) * dist + 25}px`);
+        feather.style.setProperty('--rot', `${Math.random() * 720 - 360}deg`);
+
+        canvas.appendChild(feather);
+        setTimeout(() => feather.remove(), 1000);
+    }
+}
+
+function triggerShake(canvas) {
+    canvas.classList.remove('is-shaking');
+    // Forzar reflow para reiniciar la animación
+    void canvas.offsetWidth;
+    canvas.classList.add('is-shaking');
+    setTimeout(() => canvas.classList.remove('is-shaking'), 230);
+}

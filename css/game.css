@@ -201,77 +201,246 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 15px;
-    background: rgba(0, 0, 0, 0.6);
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.55) 100%);
+    border-bottom: 1px solid rgba(255, 204, 0, 0.18);
 }
 
-.control-item {
+/* HUD pill (puntos / tiempo) */
+.hud-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.hud-pill__icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
     color: #fff;
-    font-weight: bold;
-    font-size: 0.9rem;
+    flex-shrink: 0;
 }
 
-.control-item .value {
-    color: #FFD700;
+.hud-pill--score .hud-pill__icon {
+    background: linear-gradient(135deg, var(--primary-red, #e63946), #b02121);
+    box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+}
+
+.hud-pill--time .hud-pill__icon {
+    background: linear-gradient(135deg, var(--gold, #ffcc00), #c89a00);
+    color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+}
+
+.hud-pill__info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    gap: 2px;
+}
+
+.hud-pill__label {
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 600;
+}
+
+.hud-pill__value {
     font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
 }
 
-/* Botón PAUSA */
+/* Botón mute en el HUD */
+.hud-mute {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.hud-mute:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+/* Botón PAUSA — circular con glow */
 .pause-floating {
     position: absolute;
     bottom: 15px;
     right: 15px;
-    background: #e63946;
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--primary-red, #e63946), #b02121);
     color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     z-index: 25;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 4px 14px rgba(230, 57, 70, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pause-floating::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 204, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .pause-floating:hover {
-    background: #ff3d3d;
+    transform: scale(1.08);
+    box-shadow:
+        0 6px 20px rgba(230, 57, 70, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* #gameCanvas - Estilo definitivo */
+.pause-floating:hover::before {
+    opacity: 1;
+}
+
+.pause-floating:active {
+    transform: scale(0.95);
+}
+
+/* Combo flotante en el canvas */
+.combo-display {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translate(-50%, -10px);
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 6px 16px 4px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.95), rgba(255, 140, 0, 0.95));
+    border: 2px solid var(--gold, #ffcc00);
+    border-radius: 999px;
+    box-shadow: 0 4px 16px rgba(255, 204, 0, 0.45);
+    color: #fff;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.combo-display.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.combo-display.is-bumped {
+    animation: combo-bump 0.35s ease-out;
+}
+
+@keyframes combo-bump {
+    0%   { transform: translate(-50%, 0) scale(1); }
+    40%  { transform: translate(-50%, 0) scale(1.25); }
+    100% { transform: translate(-50%, 0) scale(1); }
+}
+
+.combo-x { font-size: 0.9rem; opacity: 0.85; }
+.combo-value { font-size: 1.6rem; color: var(--gold, #ffcc00); }
+.combo-label {
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+    margin-left: 6px;
+    align-self: center;
+    opacity: 0.85;
+}
+
+/* Pato dorado raro — el movimiento usa moveRight/moveLeft del padre,
+   el brillo se aplica como filtro pulsante */
+.duck.golden {
+    filter: drop-shadow(0 0 12px #ffd700) brightness(1.25) saturate(1.4);
+}
+
+.duck.golden::before,
+.duck.golden::after {
+    background: linear-gradient(135deg, #ffe055 0%, #ffd700 50%, #b88a00 100%) !important;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
+}
+
+/* Confeti — récord */
+.confetti-piece {
+    position: fixed;
+    top: -20px;
+    width: 10px;
+    height: 14px;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 2px;
+    animation: confetti-fall 2.8s linear forwards;
+}
+
+@keyframes confetti-fall {
+    0%   { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+    100% { opacity: 0; transform: translate(var(--dx), 105vh) rotate(var(--rot)); }
+}
+
+/* Banner de "Nuevo récord" */
+.record-banner {
+    color: var(--gold, #ffcc00);
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
+    margin: 8px 0;
+    animation: record-glow 1.4s ease-in-out infinite;
+}
+
+@keyframes record-glow {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 12px rgba(255, 204, 0, 0.6); }
+    50%      { transform: scale(1.06); text-shadow: 0 0 20px rgba(255, 204, 0, 0.95); }
+}
+
+/* Canvas del juego — fondo plano cielo→césped (los globos los pinta el ::before
+   en la sección "ENTORNO DEL JUEGO" de más abajo). */
 #gameCanvas {
     flex: 1;
     position: relative;
     width: 100%;
     height: 350px;
     min-height: 300px;
-    /* Gradiente fijo: Azul a Verde */
     background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 45%, #90EE90 45%);
     overflow: hidden;
     cursor: crosshair;
 }
 
-/* PATO AMARILLO */
-#gameCanvas {
-    width: 100%;
-    height: 350px;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 45%, #90EE90 45%);
-}
-/*    BOTÓN DE PAUSA*/
-.pause-floating {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 8px 14px;
-    background: #ffcc00;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 99999;
-}
-/*    PATO REALISTA*/
+/* === PATO === */
 .duck {
     position: absolute;
     cursor: crosshair;
@@ -440,20 +609,7 @@
     cursor: pointer;
 }
 
-.info-grid {
-    display: grid;
-    /* Esto crea 3 columnas iguales si hay espacio */
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 20px;
-    padding: 20px;
-}
-
-/* Opcional: Para que en móviles se apilen */
-@media (max-width: 768px) {
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* .info-grid layout vive en style.css — evitamos duplicar reglas. */
 /* =========================================================
    ESTILO MEJORADO DEL BOTÓN DE SONIDO (#muteBtn)
    ========================================================= */
@@ -530,3 +686,200 @@
     gap: 8px; /* Separa la palabra "Puntos:" del valor numérico */
     align-items: center;
 }
+
+/* =========================================================
+   GAME JUICE — Mirilla, popups, plumas, screen shake, tiempo crítico
+   ========================================================= */
+
+/* Mirilla SVG inline (rojo, igual que el resto del UI) */
+#gameCanvas,
+.duck {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11" fill="none" stroke="%23e63946" stroke-width="2.5"/><circle cx="16" cy="16" r="2.5" fill="%23e63946"/><line x1="16" y1="2" x2="16" y2="9" stroke="%23e63946" stroke-width="2.5"/><line x1="16" y1="23" x2="16" y2="30" stroke="%23e63946" stroke-width="2.5"/><line x1="2" y1="16" x2="9" y2="16" stroke="%23e63946" stroke-width="2.5"/><line x1="23" y1="16" x2="30" y2="16" stroke="%23e63946" stroke-width="2.5"/></svg>') 16 16, crosshair;
+}
+
+/* Popup de puntos al acertar */
+.score-popup {
+    position: absolute;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    color: var(--gold, #ffcc00);
+    font-weight: 900;
+    font-size: 1.6rem;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 0 12px rgba(255, 204, 0, 0.5);
+    z-index: 30;
+    animation: score-float 0.85s ease-out forwards;
+}
+
+@keyframes score-float {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    20%  { opacity: 1; transform: translate(-50%, -60%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -180%) scale(1.4); }
+}
+
+/* Plumas que salen al acertar */
+.feather {
+    position: absolute;
+    width: 8px;
+    height: 14px;
+    background: linear-gradient(180deg, #fff 0%, #ffe9a3 100%);
+    border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 25;
+    animation: feather-fall 0.9s ease-out forwards;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes feather-fall {
+    0%   { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
+    100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot));
+    }
+}
+
+/* Screen shake en el canvas al acertar */
+#gameCanvas.is-shaking {
+    animation: canvas-shake 0.22s ease-in-out;
+}
+
+@keyframes canvas-shake {
+    0%, 100% { transform: translate(0, 0); }
+    25%      { transform: translate(-4px, 1px); }
+    50%      { transform: translate(3px, -2px); }
+    75%      { transform: translate(-2px, 2px); }
+}
+
+/* Tiempo crítico (últimos 5s) */
+.time-value.is-critical {
+    color: var(--primary-red, #e63946) !important;
+    text-shadow: 0 0 12px rgba(230, 57, 70, 0.8);
+    animation: time-pulse 0.8s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes time-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.2); }
+}
+
+/* =========================================================
+   ENTORNO DEL JUEGO — globos decorativos (fondo se queda como antes)
+   ========================================================= */
+
+/* Globos flotando suavemente en la parte superior del canvas */
+#gameCanvas::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    height: 70px;
+    pointer-events: none;
+    z-index: 1;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-position: 6% 0, 92% 12px, 48% 6px;
+    background-image:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="60" viewBox="0 0 36 60"><ellipse cx="18" cy="20" rx="14" ry="17" fill="%23e63946"/><ellipse cx="13" cy="14" rx="3" ry="5" fill="rgba(255,255,255,0.35)"/><polygon points="15,36 21,36 18,42" fill="%23b02121"/><path d="M18 42 Q20 50 18 60" stroke="%23333" stroke-width="0.8" fill="none"/></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="34" height="58" viewBox="0 0 34 58"><ellipse cx="17" cy="19" rx="13" ry="16" fill="%23ffcc00"/><ellipse cx="12" cy="13" rx="3" ry="4.5" fill="rgba(255,255,255,0.4)"/><polygon points="14,34 20,34 17,40" fill="%23c89a00"/><path d="M17 40 Q15 48 17 58" stroke="%23333" stroke-width="0.8" fill="none"/></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="55" viewBox="0 0 32 55"><ellipse cx="16" cy="18" rx="12" ry="15" fill="%2360a5fa"/><ellipse cx="11" cy="12" rx="2.5" ry="4" fill="rgba(255,255,255,0.4)"/><polygon points="13,32 19,32 16,38" fill="%231e40af"/><path d="M16 38 Q18 46 16 55" stroke="%23333" stroke-width="0.8" fill="none"/></svg>');
+    animation: balloons-float 5s ease-in-out infinite;
+    opacity: 0.85;
+}
+
+@keyframes balloons-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+}
+
+/* =========================================================
+   PANTALLA DE NOMBRE — mismo estilo que el menú de niveles
+   ========================================================= */
+
+#nameScreen {
+    background: linear-gradient(180deg, #86CDEA 0%, #90EE90 100%);
+    padding: 20px;
+}
+
+.name-card {
+    width: 85%;
+    max-width: 320px;
+    padding: 30px 25px 25px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    animation: card-pop 0.4s ease-out;
+}
+
+@keyframes card-pop {
+    0%   { opacity: 0; transform: translateY(20px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.name-card__mascot {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    margin: 0 auto 8px;
+    display: block;
+    animation: mascot-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes mascot-bob {
+    0%, 100% { transform: translateY(0)    rotate(-2deg); }
+    50%      { transform: translateY(-6px) rotate(2deg); }
+}
+
+.name-card__title {
+    color: #e63946;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.name-card__sub {
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+
+.name-card__form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.name-card__input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    color: #333;
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.name-card__input:focus {
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+}
+
+.name-card__input::placeholder {
+    color: #aaa;
+}
+
+.name-card__error {
+    color: #e63946;
+    font-size: 0.78rem;
+    min-height: 1em;
+    margin: 0;
+}
+
+/* El botón usa el .play-btn original (verde) — no se hace override */

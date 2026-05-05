@@ -34,17 +34,25 @@ export const saveScore = (levelId, score) => {
 
 export const getBestScores = () => read();
 
-export const getDailyWinner = () => {
+export const clearScores = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (err) {
+    console.warn('[Storage] Clear failed:', err.message);
+  }
+};
+
+export const getTopScores = (limit = 3) => {
   const entries = Object.entries(read()).map(([level, entry]) => ({
     level: Number(level),
     score: typeof entry === 'number' ? entry : entry.score,
     name: typeof entry === 'number' ? 'Player' : entry.name,
   }));
 
-  if (entries.length === 0) return null;
-
-  return entries.sort((a, b) => b.score - a.score)[0];
+  return entries.sort((a, b) => b.score - a.score).slice(0, limit);
 };
+
+export const getDailyWinner = () => getTopScores(1)[0] ?? null;
 
 export const savePlayerName = (name) => {
   try {

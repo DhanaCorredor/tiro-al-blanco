@@ -18,21 +18,21 @@
 <body>
 
     <nav class="game-nav">
-        <a href="#" class="nav-logo">
-            <img src="assets/logo.png" alt="Logo" />
+        <a href="#" class="nav-logo" aria-label="Inicio del juego">
+            <img src="assets/logo.png" alt="" />
         </a>
         <a href="https://adriasu09.github.io/landing-Carnival/#games" class="nav-item" target="_blank" rel="noopener">
-            <i class="fas fa-home"></i><span>Home</span>
+            <i class="fas fa-home" aria-hidden="true"></i><span>Home</span>
         </a>
-        <a href="#" class="nav-item active">
-            <i class="fas fa-crosshairs"></i><span>Jugar</span>
+        <a href="#gameScreen" class="nav-item active">
+            <i class="fas fa-crosshairs" aria-hidden="true"></i><span>Jugar</span>
         </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-trophy"></i><span>Ranking</span>
+        <a href="#rankingCard" class="nav-item">
+            <i class="fas fa-trophy" aria-hidden="true"></i><span>Ranking</span>
         </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-cog"></i><span>Ajustes</span>
-        </a>
+        <button type="button" class="nav-item" data-open-settings>
+            <i class="fas fa-cog" aria-hidden="true"></i><span>Ajustes</span>
+        </button>
     </nav>
 
     <main class="game-area">
@@ -44,8 +44,9 @@
 
             <section id="nameScreen" class="screen active" role="dialog" aria-modal="true" aria-labelledby="nameTitle">
                 <div class="name-card">
-                    <h2 class="name-card__title" id="nameTitle"> Di un usuario</h2>
-                    <p class="name-card__sub">Tu puntuacion mas alta aparecerá en el Daily Winner</p>
+                    <img src="assets/rubber-duck.png" alt="" class="name-card__mascot" />
+                    <h2 class="name-card__title" id="nameTitle">¿Quién dispara?</h2>
+                    <p class="name-card__sub">Tu mejor puntuación entrará al podio del día.</p>
                     <form id="nameForm" class="name-card__form" novalidate>
                         <input type="text" id="playerNameInput" class="name-card__input"
                             placeholder="Tu nombre o alias…" maxlength="20" autocomplete="off"
@@ -79,20 +80,34 @@
 
             <div id="gameScreen" class="screen">
                 <div class="game-controls">
-                    <div class="control-item">PUNTOS: <span class="value" id="score">0</span></div>
-                    <div class="control-item">TIEMPO: <span class="value time-value" id="time">45</span></div>
-                    <div class="control-item">
-                        <button id="muteBtn" aria-label="Silenciar sonido"
-                            style="cursor:pointer; background:none; border:none; color:white; font-size: 1.2rem;">
-                            <i class="fas fa-volume-up" id="muteIcon"></i>
-                        </button>
+                    <div class="hud-pill hud-pill--score">
+                        <i class="fas fa-bullseye hud-pill__icon"></i>
+                        <div class="hud-pill__info">
+                            <span class="hud-pill__label">Puntos</span>
+                            <span class="hud-pill__value" id="score">0</span>
+                        </div>
                     </div>
+
+                    <div class="hud-pill hud-pill--time">
+                        <i class="fas fa-clock hud-pill__icon"></i>
+                        <div class="hud-pill__info">
+                            <span class="hud-pill__label">Tiempo</span>
+                            <span class="hud-pill__value time-value" id="time">45</span>
+                        </div>
+                    </div>
+
+                    <button id="muteBtn" class="hud-mute" aria-label="Silenciar sonido">
+                        <i class="fas fa-volume-up" id="muteIcon"></i>
+                    </button>
                 </div>
 
                 <div id="gameCanvas">
-                    <button class="pause-floating" id="pauseBtn">
-                        <span class="icon">⏸️</span>
-                        <span class="text">PAUSA</span>
+                    <div class="combo-display" id="comboDisplay" aria-hidden="true">
+                        <span class="combo-x">x</span><span class="combo-value" id="comboValue">2</span>
+                        <span class="combo-label">COMBO</span>
+                    </div>
+                    <button class="pause-floating" id="pauseBtn" aria-label="Pausar">
+                        <i class="fas fa-pause"></i>
                     </button>
                 </div>
             </div>
@@ -105,6 +120,7 @@
 
             <div id="gameOverScreen" class="screen">
                 <h2>GAME OVER</h2>
+                <p class="record-banner" id="recordBanner" hidden>¡NUEVO RÉCORD!</p>
                 <p>Puntos: <span id="finalScore">0</span></p>
                 <p>Aciertos: <span id="finalHits">0</span></p>
                 <p>Precisión: <span id="finalPrecision">0%</span></p>
@@ -116,65 +132,96 @@
 
     <section class="info-section">
         <div class="info-grid">
-            <article class="card">
-                <!-- <span class="card-label">LOCATION</span>
-                <h3>Madrid</h3>
-                <span class="card-sub-info">Spain District</span>-->
 
-                <div class="container">
-                    <h4>UBICACION - CLIMA</h4>
-                    <input type="text" id="ciudad" placeholder="Escribe una ciudad...">
-                    <button id="buscar">Consultar</button>
-
-                    <div id="resultado">
-                        <h2 id="nombre-ciudad"></h2>
-                        <p id="temp"></p>
-                        <p id="desc"></p>
-                    </div>
+            <article class="card weather-card" aria-label="Clima y ubicación">
+                <span class="card-label">UBICACIÓN</span>
+                <div class="weather-display" id="weatherDisplay">
+                    <p class="weather-empty">Busca tu ciudad o pulsa
+                        <i class="fas fa-location-arrow"></i> para usar tu ubicación.
+                    </p>
                 </div>
-
-
-
-
-                <button onclick="obtenerUbicacionActual()"></button>
-
-
+                <form class="weather-form" id="weatherForm" novalidate>
+                    <input type="text" id="ciudad" class="weather-input"
+                        placeholder="Ciudad..." autocomplete="off" aria-label="Ciudad" />
+                    <button type="submit" id="buscar" class="weather-btn" aria-label="Buscar ciudad">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button type="button" id="locateBtn" class="weather-btn weather-btn--gold"
+                        aria-label="Usar mi ubicación">
+                        <i class="fas fa-location-arrow"></i>
+                    </button>
+                </form>
             </article>
 
-
+            <article class="card ranking-card" id="rankingCard" aria-label="Ranking de ganadores">
+                <span class="card-label">RANKING</span>
+                <p class="ranking-subtitle">Daily Winners</p>
+                <div class="podium" id="rankingList">
+                    <p class="ranking-empty">Sin partidas aún. ¡Juega para entrar al ranking!</p>
+                </div>
             </article>
 
-            <article class="card" aria-label="Ganador del día">
-                <span class="card-label">Daily Winner</span>
-                <h3 id="dailyWinnerName">@Unknown</h3>
-                <span class="card-sub-info" id="dailyWinnerScore">0 Hits</span>
-            </article>
-
-            <article class="card" id="news-section">
+            <article class="card news-card-wrapper" id="news-section" aria-label="Titulares">
                 <span class="card-label">TITULARES</span>
                 <div id="newsContainer"></div>
             </article>
+
         </div>
     </section>
 
     <footer>
-        <nav class="footer-nav">
-            <button type="button" aria-label="Inicio"><i class="fas fa-home"></i><br>INICIO</button>
-            <button type="button" aria-label="Idiomas"><i class="fas fa-globe"></i><br>IDIOMAS</button>
-            <button type="button" aria-label="Juegos"><i class="fas fa-gamepad"></i><br>JUEGOS</button>
-            <button type="button" aria-label="Perfil"><i class="fas fa-user"></i><br>PERFIL</button>
+        <nav class="footer-nav" aria-label="Navegación inferior">
+            <button type="button" aria-label="Volver arriba" data-scroll-top>
+                <i class="fas fa-home" aria-hidden="true"></i><br>INICIO
+            </button>
+            <a href="https://adriasu09.github.io/landing-Carnival/#games" target="_blank" rel="noopener" aria-label="Más juegos">
+                <i class="fas fa-gamepad" aria-hidden="true"></i><br>JUEGOS
+            </a>
+            <button type="button" aria-label="Perfil y ajustes" data-open-settings>
+                <i class="fas fa-user" aria-hidden="true"></i><br>PERFIL
+            </button>
         </nav>
         <div class="nav-footer">
-            <div class="legal-links">
-                <a href="#">Condiciones de uso</a>
-                <a href="#">Política de privacidad</a>
-                <a href="#">Contacto</a>
-            </div>
             <p>&copy; 2026 Tiro al Blanco • <strong>FemCoders</strong></p>
         </div>
     </footer>
+
+    <dialog id="settingsModal" class="settings-modal" aria-labelledby="settingsTitle">
+        <div class="settings-card">
+            <header class="settings-card__header">
+                <h2 class="settings-card__title" id="settingsTitle">Ajustes</h2>
+                <button type="button" class="settings-card__close" data-close-settings aria-label="Cerrar">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </header>
+
+            <label class="settings-row" for="settingsName">
+                <span class="settings-row__label">Nombre</span>
+                <input type="text" id="settingsName" class="settings-input"
+                    maxlength="20" autocomplete="off" placeholder="Tu alias" />
+            </label>
+
+            <div class="settings-row">
+                <span class="settings-row__label">Sonido</span>
+                <button type="button" class="settings-toggle" id="settingsMute" aria-pressed="false">
+                    <i class="fas fa-volume-up" id="settingsMuteIcon" aria-hidden="true"></i>
+                    <span id="settingsMuteText">Activado</span>
+                </button>
+            </div>
+
+            <div class="settings-actions">
+                <button type="button" class="settings-btn settings-btn--danger" id="settingsReset">
+                    <i class="fas fa-trash" aria-hidden="true"></i> Borrar puntuaciones
+                </button>
+                <button type="button" class="settings-btn settings-btn--primary" id="settingsSave">
+                    Guardar y cerrar
+                </button>
+            </div>
+        </div>
+    </dialog>
     
     <script src="features/api/api-connection.js"></script>
+    <script src="features/api/config.js" defer></script>
     <script src="features/api/noticias.js" defer></script>
     <script src="main.js" type="module"></script>
 

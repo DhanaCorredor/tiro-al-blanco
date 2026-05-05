@@ -1,70 +1,141 @@
+const API_KEY = '739a23dd76ebbf7f80d9769fe00f9dc7';
+const WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const STORED_CITY = 'tiro-weather-city';
+const DEFAULT_CITY = 'Madrid';
 
-const API_KEY = '739a23dd76ebbf7f80d9769fe00f9dc7'; // Reemplaza con tu llave real
-const btnBuscar = document.getElementById('buscar');
+const form = document.getElementById('weatherForm');
+const cityInput = document.getElementById('ciudad');
+const locateBtn = document.getElementById('locateBtn');
+const display = document.getElementById('weatherDisplay');
 
-btnBuscar.addEventListener('click', () => {
-    const ciudad = document.getElementById('ciudad').value;
-    if (ciudad) {
-        obtenerClima(ciudad);
-    }
-});
-
-async function obtenerClima(ciudad) {
-    // URL de la API: unidades métricas (Celsius) y lenguaje en español
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${API_KEY}&units=metric&lang=es`;
-
-    try {
-        const respuesta = await fetch(url);
-        
-        // Si la ciudad no existe o hay error
-        if (!respuesta.ok) {
-            throw new Error('Ciudad no encontrada');
-        }
-
-        const datos = await respuesta.json();
-        mostrarClima(datos);
-        
-    } catch (error) {
-        alert(error.message);
-    }
+if (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const ciudad = cityInput.value.trim();
+    if (ciudad) obtenerClima({ q: ciudad });
+  });
 }
 
-function mostrarClima(datos) {
-    document.getElementById('nombre-ciudad').innerText = `${datos.name}, ${datos.sys.country}`;
-    document.getElementById('temp').innerText = `Temperatura: ${datos.main.temp}°C`;
-    document.getElementById('desc').innerText = `Cielo: ${datos.weather[0].description}`;
+if (locateBtn) {
+  locateBtn.addEventListener('click', obtenerUbicacionActual);
+}
+
+// Carga inicial: última ciudad consultada (localStorage) o ciudad por defecto.
+const lastCity = localStorage.getItem(STORED_CITY) || DEFAULT_CITY;
+obtenerClima({ q: lastCity });
+
+async function obtenerClima(params) {
+  setLoading();
+  try {
+    const url = `${WEATHER_URL}?${new URLSearchParams({
+      ...params,
+      appid: API_KEY,
+      units: 'metric',
+      lang: 'es'
+    })}`;
+
+    const respuesta = await fetch(url);
+    if (!respuesta.ok) throw new Error('Ciudad no encontrada');
+    const datos = await respuesta.json();
+    mostrarClima(datos);
+    try {
+      localStorage.setItem(STORED_CITY, datos.name);
+    } catch {}
+  } catch (error) {
+    setError(error.message);
+  }
 }
 
 function obtenerUbicacionActual() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(posicion => {
-            const lat = posicion.coords.latitude;
-            const lon = posicion.coords.longitude;
-            
-            // Llamamos a una nueva función que busque por coordenadas
-            buscarPorCoordenadas(lat, lon);
-        }, error => {
-            console.error("Error al obtener ubicación:", error);
-            alert("No se pudo acceder a tu ubicación.");
-        });
-    } else {
-        alert("Tu navegador no soporta geolocalización.");
-    }
+  if (!navigator.geolocation) {
+    setError('Tu navegador no soporta geolocalización.');
+    return;
+  }
+  setLoading();
+  navigator.geolocation.getCurrentPosition(
+    (pos) =>
+      obtenerClima({
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude
+      }),
+    () => setError('No se pudo acceder a tu ubicación.')
+  );
 }
 
-// 2. Nueva función de búsqueda usando Latitud y Longitud
-async function buscarPorCoordenadas(lat, lon) {
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`;
-
-    try {
-        const respuesta = await fetch(url);
-        const datos = await respuesta.json();
-        mostrarClima(datos);
-    } catch (error) {
-        console.error("Error al obtener clima por coordenadas:", error);
-    }
+function setLoading() {
+  if (!display) return;
+  display.innerHTML = '<p class="weather-empty">Cargando clima...</p>';
 }
 
-window.onload = obtenerUbicacionActual;
+function setError(msg) {
+  if (!display) return;
+  display.innerHTML = `<p class="weather-empty">${msg}</p>`;
+}
 
+function mostrarClima(datos) {
+  if (!display) return;
+  display.innerHTML = '';
 
+  const main = document.createElement('div');
+  main.className = 'weather-main';
+
+  const icon = datos.weather?.[0]?.icon;
+  if (icon) {
+    const img = document.createElement('img');
+    img.className = 'weather-icon';
+    img.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+    img.alt = datos.weather[0].description || '';
+    main.appendChild(img);
+  }
+
+  const temp = document.createElement('p');
+  temp.className = 'weather-temp';
+  temp.textContent = `${Math.round(datos.main.temp)}°C`;
+
+  const city = document.createElement('p');
+  city.className = 'weather-city';
+  city.textContent = `${datos.name}, ${datos.sys.country}`;
+
+  const desc = document.createElement('p');
+  desc.className = 'weather-desc';
+  desc.textContent = datos.weather?.[0]?.description || '';
+
+  main.append(temp, city, desc);
+
+  const stats = document.createElement('div');
+  stats.className = 'weather-stats';
+  stats.append(
+    createStat('fa-droplet', `${datos.main.humidity}%`, 'Humedad'),
+    createStat(
+      'fa-wind',
+      `${Math.round(datos.wind.speed * 3.6)} km/h`,
+      'Viento'
+    ),
+    createStat(
+      'fa-temperature-half',
+      `${Math.round(datos.main.feels_like)}°`,
+      'Sensación'
+    )
+  );
+
+  display.append(main, stats);
+}
+
+function createStat(iconName, value, label) {
+  const stat = document.createElement('div');
+  stat.className = 'weather-stat';
+
+  const icon = document.createElement('i');
+  icon.className = `fas ${iconName}`;
+
+  const val = document.createElement('span');
+  val.className = 'weather-stat-value';
+  val.textContent = value;
+
+  const lbl = document.createElement('span');
+  lbl.className = 'weather-stat-label';
+  lbl.textContent = label;
+
+  stat.append(icon, val, lbl);
+  return stat;
+}

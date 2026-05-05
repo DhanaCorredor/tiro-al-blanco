@@ -1,111 +1,40 @@
-
-// CUANDO DETECTA ERROR GLOBAL, REDIRIGE A PÁGINA DE ERROR.HTML
-/*window.onerror = function (msg, url, line, col, error) {
-    console.error("Error global capturado:", msg, url, line, col, error);
-    window.location.href = "error.html";
-    return true;
-};
-
-window.addEventListener("error", function (e) {
-    console.error("Error de recurso:", e);
-    window.location.href = "pages/error.html";
-}, true);
-
-// Promesas rechazadas sin catch
-window.addEventListener("unhandledrejection", function (e) {
-    console.error("Promesa sin manejar:", e.reason);
-    window.location.href = "pages/error.html";
-});*/
-
 // Punto de entrada de la aplicación
-import { initUsernameFlow, initViewListeners} from './views.js';
-// IMPORTANTE: Ruta corregida apuntando a la carpeta /Sound/
-import { playSound, playBackgroundMusic, pauseBackgroundMusic, toggleMute } from './Sound/sound.js';
+import {
+    initUsernameFlow,
+    initViewListeners,
+    initSettings,
+    initFooterScrollTop
+} from './views.js';
+import { updateDailyWinnerView } from './features/core/score.js';
+import {
+    playBackgroundMusic,
+    pauseBackgroundMusic,
+    toggleMute
+} from './Sound/sound.js';
 
 initUsernameFlow();
 initViewListeners();
+initSettings();
+initFooterScrollTop();
+updateDailyWinnerView();
 
-
-// Gestión de APIs
-const APIManager = {
-    async getLocation() {
-        return new Promise((resolve) => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
-                    () => resolve({ latitude: null, longitude: null })
-                );
-            } else {
-                resolve({ latitude: null, longitude: null });
-            }
-        });
-    },
-
-    async getCountryInfo(lat, lon) {
-        if (!lat || !lon) return null;
-        try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-            return await response.json();
-        } catch {
-            return null;
-        }
-    }
-};
-
-// Cargar datos de ubicación del usuario
-async function loadLocationData() {
-    const { latitude, longitude } = await APIManager.getLocation();
-    
-    if (latitude && longitude) {
-        const locationData = await APIManager.getCountryInfo(latitude, longitude);
-        if (locationData?.address) {
-            const city = locationData.address.city || locationData.address.town || "Ubicación desconocida";
-            const country = locationData.address.country || "";
-            const locEl = document.querySelector('.location-top span');
-            if (locEl) locEl.textContent = `${city.toUpperCase()}, ${country.substring(0,2).toUpperCase()}`;
-        }
-    }
-}
-// Inicialización centralizada al cargar el DOM
+// Botones que controlan la música/sonido — viven aquí (no en views.js)
+// porque acoplan UI con el módulo de Sound, que no debería conocer la UI.
 document.addEventListener('DOMContentLoaded', () => {
-    initViewListeners();
-    loadLocationData();
-
-    // --- LÓGICA DE AUDIO (con comprobación de seguridad) ---
-    
-    // 1. Mute Button
     const muteBtn = document.getElementById('muteBtn');
     if (muteBtn) {
         muteBtn.addEventListener('click', () => {
             const isMuted = toggleMute();
             const muteIcon = document.getElementById('muteIcon');
             if (muteIcon) {
-                muteIcon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+                muteIcon.className = isMuted
+                    ? 'fas fa-volume-mute'
+                    : 'fas fa-volume-up';
             }
         });
     }
 
-    // 2. Start Game (Inicia música)
-    const startBtn = document.getElementById('startBtn');
-    if (startBtn) {
-        startBtn.addEventListener('click', () => {
-            playBackgroundMusic();
-        });
-    }
-
-    // 3. Pause Game
-    const pauseBtn = document.getElementById('pauseBtn');
-    if (pauseBtn) {
-        pauseBtn.addEventListener('click', () => {
-            pauseBackgroundMusic();
-        });
-    }
-
-    // 4. Resume Game
-    const resumeBtn = document.getElementById('resumeBtn');
-    if (resumeBtn) {
-        resumeBtn.addEventListener('click', () => {
-            playBackgroundMusic();
-        });
-    }
+    document.getElementById('startBtn')?.addEventListener('click', playBackgroundMusic);
+    document.getElementById('pauseBtn')?.addEventListener('click', pauseBackgroundMusic);
+    document.getElementById('resumeBtn')?.addEventListener('click', playBackgroundMusic);
 });

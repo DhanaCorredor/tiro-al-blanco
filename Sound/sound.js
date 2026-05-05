@@ -52,7 +52,7 @@ export function stopBackgroundMusic() {
 
 export function toggleMute() {
     isMuted = !isMuted;
-    
+
     // Si silenciamos, pausamos. Si quitamos silencio, reproducimos.
     if (isMuted) {
         sounds.background.pause();
@@ -64,4 +64,6 @@ export function toggleMute() {
     return isMuted;
 }
 
-console.log("El módulo de sonido se ha cargado correctamente");
+export function getMuteState() {
+    return isMuted;
+}

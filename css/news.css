@@ -1,114 +1,222 @@
-/* news.css - Diseño estético de 2 columnas: Imagen -> Título -> Leer más */
+/* news.css — Carrusel de noticias estilo feria */
 
 #newsContainer {
-    display: grid;
-    /* Dos columnas iguales */
-    grid-template-columns: 1fr 1fr; 
-    gap: 20px;
-    padding: 10px 20px 20px 20px;
+  padding: 0;
+  flex-grow: 1;
+  display: flex;
 }
 
-/* Responsivo: 1 columna en móviles */
-@media (max-width: 650px) {
-    #newsContainer {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
+/* Estados (cargando / error / vacío) */
+.news-status {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-gray);
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--glass);
+  font-size: 0.85rem;
 }
 
+.news-status--error {
+  color: var(--primary-red);
+}
+
+.news-status code {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+/* Carrusel */
+.news-carousel {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Acento superior fino en degradado rojo→dorado */
+.news-carousel::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-red) 0%,
+    var(--gold) 100%
+  );
+}
+
+/* Frame que contiene todas las cards apiladas */
+.carousel-frame {
+  position: relative;
+  flex-grow: 1;
+  min-height: 240px;
+}
+
+/* Card individual: la activa se ve, las demás transparentes */
 .news-card {
-    background: var(--bg-card); /* Fondo oscuro de tu style.css */
-    border-radius: 16px; /* Bordes suaves */
-    overflow: hidden; /* Para que la imagen respete los bordes redondos */
-    border: 1px solid var(--glass); /* Borde sutil estilo cristal */
-    display: flex;
-    flex-direction: column;
-    transition: transform var(--transition), box-shadow var(--transition);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
-.news-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
+.news-card.is-active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Forzar que solo se vean 2 noticias */
-#newsContainer .news-card:nth-child(n+3) {
-    display: none !important;
-}
-
-/* 1. Imagen pequeña y centrada arriba */
 .news-card-image {
-    width: 100%;
-    height: 100px; /* Altura pequeña y fija */
-    object-fit: cover; /* Recorta la imagen para que encaje sin deformarse */
-    border-bottom: 1px solid var(--glass);
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  filter: brightness(0.85);
 }
 
-/* Contenedor del contenido (Título y Leer más) */
 .news-card-content {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1; /* Ocupa el espacio restante */
-    justify-content: space-between; /* Separa el título del botón */
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
 }
 
-/* Ocultar elementos innecesarios para un diseño limpio */
-.news-header, 
-.description, 
-.date, 
-.author {
-    display: none !important;
+.news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
-/* 2. Título (debajo de la imagen) */
+.source-badge {
+  display: inline-block;
+  background: var(--primary-red);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.date {
+  display: inline-block;
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
 .news-card h3 {
-    font-size: 0.95rem; /* Tamaño elegante y no muy grande */
-    color: var(--text-white);
-    margin-bottom: 12px;
-    line-height: 1.3;
-    /* Recorte a 2 líneas para uniformidad */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    font-weight: 600;
+  color: var(--text-white);
+  font-size: 0.9rem;
+  line-height: 1.3;
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* 3. "Leer más" (debajo del título, estilizado como botón) */
-.news-footer {
-    margin-top: auto; /* Empuja el botón al fondo de la tarjeta */
-    text-align: center;
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-gray);
+  font-size: 0.75rem;
 }
 
 .read-more {
-    display: inline-block;
-    width: 100%;
-    padding: 8px 15px;
-    background-color: var(--primary-red); /* Tu rojo principal */
-    color: white !important;
-    text-decoration: none !important;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: background-color var(--transition);
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 6px 12px;
+  background: var(--primary-red);
+  color: #fff !important;
+  text-decoration: none !important;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background var(--transition), transform var(--transition);
 }
 
 .read-more:hover {
-    background-color: var(--primary-hover); /* Rojo más claro al hover */
+  background: var(--primary-hover);
+  transform: translateY(-2px);
 }
 
-/* Estados de carga y error estéticos */
-.loading, .error {
-    grid-column: 1 / -1; /* Ocupa todo el ancho del grid */
-    text-align: center;
-    padding: 30px;
-    color: var(--text-gray);
-    background: var(--bg-card);
-    border-radius: 12px;
-    border: 1px solid var(--glass);
-    font-size: 0.8rem;
+/* Controles inferiores */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid var(--glass);
+}
+
+.carousel-nav {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), color var(--transition),
+    transform var(--transition);
+}
+
+.carousel-nav:hover {
+  background: var(--gold);
+  color: var(--bg-dark);
+  transform: scale(1.08);
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--transition), transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.carousel-dot:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.carousel-dot.is-active {
+  background: var(--gold);
+  transform: scale(1.3);
+  box-shadow: 0 0 6px var(--gold);
 }

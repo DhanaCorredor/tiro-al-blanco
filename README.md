@@ -25,17 +25,20 @@ Este proyecto forma parte de la iniciativa Carnival DOM, desarrollada para la em
 
 ## ⭐ Funcionalidades Extra
 
-- Niveles de dificultad progresivos
+- Niveles de dificultad progresivos (3 niveles)
+- Sistema de **combo** (multiplicador hasta x5 al encadenar aciertos)
+- **Pato dorado** raro (más rápido, vale 100 pts)
+- **Confeti** y banner cuando bates tu récord
+- **Podio** con top 3 (medallas oro/plata/bronce)
 - Guardado de puntuaciones en localStorage
-- Efectos de sonido interactivos
-- Animaciones y transiciones dinámicas
+- Efectos visuales: mirilla, plumas al acertar, screen shake, tiempo crítico pulsante
+- Música y sonidos interactivos con mute
 
 ## 🌍 Integración con APIs
 
-- Geolocalización del usuario
-- Mostrar país y bandera
-- Clima actual según ubicación
-- Noticias relevantes en sidebar
+- **GNews** — titulares en carrusel rotativo
+- **OpenWeatherMap** — clima por ciudad y por geolocalización (humedad, viento, sensación)
+- **Geolocation API** del navegador — botón 📍 para usar la ubicación del usuario
 
 ## 🎨 UX/UI
 
@@ -48,34 +51,41 @@ Este proyecto forma parte de la iniciativa Carnival DOM, desarrollada para la em
 ## 🛠️ Tecnologías Utilizadas
 
 - HTML5 (semántico)
-- CSS3 (animaciones, responsive)
-- JavaScript (Vanilla)
-- Fetch API (consumo de APIs)
-- LocalStorage
+- CSS3 (animaciones, responsive, custom properties)
+- JavaScript (Vanilla, módulos ES)
+- Fetch API (GNews + OpenWeatherMap)
+- LocalStorage (puntuaciones, nombre del jugador, última ciudad)
 - Figma ([diseño UI/UX](https://www.figma.com/proto/VnGMiJgMITOboXdDcvjNWA/Tiro-al-Blanco?node-id=0-1&t=QBiD9y0QOKEtWF8o-1))
-- stitch - https://stitch.withgoogle.com/
 - Git & GitFlow
 
 ## 🧱 Estructura del Proyecto
 
 ```
 tiro-al-blanco/
-├── assets/
+├── assets/                  # Imágenes y sonidos
 ├── css/
-│   ├── style.css
-│   └── game.css
+│   ├── style.css            # Estilos globales (cards, layout, footer)
+│   ├── game.css             # Pantallas, HUD, pato, efectos del juego
+│   ├── news.css             # Carrusel de noticias
+│   └── error.css            # Página de error
+├── data/
+│   └── levels.js            # Configuración de niveles
 ├── features/
-│   ├── core/
-│   │   ├── game.js
-│   │   └── storage.js
-│   ├── components/
-│   │   └── target.js
-│   └── data/
-│       └── levels.js
-├── helpers/
-│   └── utils.js
-├── views.js
-├── main.js
+│   ├── api/
+│   │   ├── api-connection.js  # OpenWeatherMap (clima)
+│   │   ├── noticias.js        # GNews (titulares)
+│   │   ├── config.example.js  # Plantilla de claves
+│   │   └── config.js          # Claves locales (gitignored)
+│   └── core/
+│       ├── game.js          # Bucle principal, patos, combo, dorado
+│       ├── score.js         # Render del podio
+│       └── storage.js       # localStorage
+├── pages/
+│   └── error.html
+├── Sound/
+│   └── sound.js
+├── views.js                 # Pantallas, HUD, confeti, combo
+├── main.js                  # Punto de entrada
 ├── index.html
 ├── .gitignore
 └── README.md
@@ -103,16 +113,22 @@ open index.html
 
 ## 🔑 Configuración de APIs
 
-Para funcionalidades adicionales, necesitas claves API:
+El proyecto usa dos APIs externas:
 
-- OpenWeatherMap / WeatherAPI
-- NewsAPI / Mediastack
+- **OpenWeatherMap** — clima por ciudad / geolocalización.
+- **GNews** (https://gnews.io/) — noticias del sidebar.
 
-Ejemplo:
+### Setup local
 
-```js
-const API_KEY = "tu_api_key";
-```
+1. Regístrate en [GNews](https://gnews.io/) y copia tu API key.
+2. Copia `features/api/config.example.js` a `features/api/config.js`.
+3. Abre `features/api/config.js` y reemplaza `'TU_API_KEY_DE_GNEWS'` por tu clave real.
+
+`features/api/config.js` está en `.gitignore`, así que tu clave nunca se sube al repo.
+
+> ⚠️ Las claves usadas en el navegador siempre son visibles en DevTools.
+> Para producción real, conviene servirlas a través de un proxy (Cloudflare Worker,
+> función serverless de Vercel/Netlify, etc.).
 
 ## ⚠️ Manejo de Errores
 
