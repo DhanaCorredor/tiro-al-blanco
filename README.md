@@ -134,11 +134,8 @@ Cualquier `git push` a `main` redespliega automáticamente.
 
 ## 👤 Autor
 
-**[Tu nombre aquí]**
+**[Dhana Corredor]**
 - GitHub: [@DhanaCorredor](https://github.com/DhanaCorredor)
-- LinkedIn: [añadir]
-- Email: [añadir]
-
 Proyecto de formación en Frontend Developer · Factoría F5 · 2026.
 
 ## ✅ Estado
