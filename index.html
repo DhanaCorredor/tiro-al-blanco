@@ -1,81 +1,230 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carnival Ducks</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/game.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carnival Ducks | Tiro al Blanco</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/game.css" />
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="css/news.css" />
 </head>
+
 <body>
 
-    <div class="dashboard-container">
-        <header class="app-header">
-            <div class="weather-info">
-                <i class="fas fa-cloud-rain"></i>
-                <div class="weather-details">
-                    <span>24°C Sunny</span>
+    <nav class="game-nav">
+        <a href="#" class="nav-logo" aria-label="Inicio del juego">
+            <img src="assets/logo.png" alt="" />
+        </a>
+        <a href="https://adriasu09.github.io/landing-Carnival/#games" class="nav-item" target="_blank" rel="noopener">
+            <i class="fas fa-home" aria-hidden="true"></i><span>Home</span>
+        </a>
+        <a href="#gameScreen" class="nav-item active">
+            <i class="fas fa-crosshairs" aria-hidden="true"></i><span>Jugar</span>
+        </a>
+        <a href="#rankingCard" class="nav-item">
+            <i class="fas fa-trophy" aria-hidden="true"></i><span>Ranking</span>
+        </a>
+        <button type="button" class="nav-item" data-open-settings>
+            <i class="fas fa-cog" aria-hidden="true"></i><span>Ajustes</span>
+        </button>
+    </nav>
+
+    <main class="game-area">
+        <div class="toldo">
+            <div class="rayas"></div>
+        </div>
+
+        <div class="game-content">
+
+            <section id="nameScreen" class="screen active" role="dialog" aria-modal="true" aria-labelledby="nameTitle">
+                <div class="name-card">
+                    <img src="assets/rubber-duck.png" alt="" class="name-card__mascot" />
+                    <h2 class="name-card__title" id="nameTitle">¿Quién dispara?</h2>
+                    <p class="name-card__sub">Tu mejor puntuación entrará al podio del día.</p>
+                    <form id="nameForm" class="name-card__form" novalidate>
+                        <input type="text" id="playerNameInput" class="name-card__input"
+                            placeholder="Tu nombre o alias…" maxlength="20" autocomplete="off"
+                            aria-label="Introduce tu nombre" required />
+                        <p class="name-card__error" id="nameError" role="alert" aria-live="polite"></p>
+                        <button type="submit" class="play-btn">Continuar →</button>
+                    </form>
+                </div>
+            </section>
+
+            <div id="startScreen" class="screen">
+                <div class="level-select">
+                    <h2>ELIGE TU NIVEL</h2>
+                    <div class="level-buttons">
+                        <button class="level-btn level-1" data-level="1">
+                            <span class="level-number">1</span>
+                            <span class="level-name">Principiante</span>
+                        </button>
+                        <button class="level-btn level-2" data-level="2">
+                            <span class="level-number">2</span>
+                            <span class="level-name">Intermedio</span>
+                        </button>
+                        <button class="level-btn level-3" data-level="3">
+                            <span class="level-number">3</span>
+                            <span class="level-name">Experto</span>
+                        </button>
+                    </div>
+                    <button class="play-btn" id="startBtn" disabled>JUGAR</button>
                 </div>
             </div>
-            <h1 class="app-title">CARNIVAL<br>DUCKS</h1>
-            <div class="location-top">
-                <span>MADRID, ES</span>
-            </div>
-        </header>
 
-        <main class="game-area">
-            <div class="carnival-awning">
-                <div class="awning-segment red"></div>
-                <div class="awning-segment white"></div>
-                <div class="awning-segment red"></div>
-                <div class="awning-segment white"></div>
-                <div class="awning-segment red"></div>
+            <div id="gameScreen" class="screen">
+                <div class="game-controls">
+                    <div class="hud-pill hud-pill--score">
+                        <i class="fas fa-bullseye hud-pill__icon"></i>
+                        <div class="hud-pill__info">
+                            <span class="hud-pill__label">Puntos</span>
+                            <span class="hud-pill__value" id="score">0</span>
+                        </div>
+                    </div>
+
+                    <div class="hud-pill hud-pill--time">
+                        <i class="fas fa-clock hud-pill__icon"></i>
+                        <div class="hud-pill__info">
+                            <span class="hud-pill__label">Tiempo</span>
+                            <span class="hud-pill__value time-value" id="time">45</span>
+                        </div>
+                    </div>
+
+                    <button id="muteBtn" class="hud-mute" aria-label="Silenciar sonido">
+                        <i class="fas fa-volume-up" id="muteIcon"></i>
+                    </button>
+                </div>
+
+                <div id="gameCanvas">
+                    <div class="combo-display" id="comboDisplay" aria-hidden="true">
+                        <span class="combo-x">x</span><span class="combo-value" id="comboValue">2</span>
+                        <span class="combo-label">COMBO</span>
+                    </div>
+                    <button class="pause-floating" id="pauseBtn" aria-label="Pausar">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                </div>
             </div>
 
-            <div class="game-controls">
-                <div class="control-item">SCORE: <span class="value">240</span></div>
-                <button class="control-item btn-reset">REINICIAR</button>
-                <div class="control-item">TIME: <span class="value time-value">00:45</span></div>
+            <div id="pauseScreen" class="screen">
+                <h2>JUEGO PAUSADO</h2>
+                <button id="resumeBtn">REANUDAR</button>
+                <button id="exitPauseBtn">SALIR</button>
             </div>
 
-            <div class="play-button-container">
-                <button class="play-main-btn">
-                    <span>PLAY</span>
+            <div id="gameOverScreen" class="screen">
+                <h2>GAME OVER</h2>
+                <p class="record-banner" id="recordBanner" hidden>¡NUEVO RÉCORD!</p>
+                <p>Puntos: <span id="finalScore">0</span></p>
+                <p>Aciertos: <span id="finalHits">0</span></p>
+                <p>Precisión: <span id="finalPrecision">0%</span></p>
+                <button id="restartBtn">JUGAR DE NUEVO</button>
+            </div>
+
+        </div>
+    </main>
+
+    <section class="info-section">
+        <div class="info-grid">
+
+            <article class="card weather-card" aria-label="Clima y ubicación">
+                <span class="card-label">UBICACIÓN</span>
+                <div class="weather-display" id="weatherDisplay">
+                    <p class="weather-empty">Busca tu ciudad o pulsa
+                        <i class="fas fa-location-arrow"></i> para usar tu ubicación.
+                    </p>
+                </div>
+                <form class="weather-form" id="weatherForm" novalidate>
+                    <input type="text" id="ciudad" class="weather-input"
+                        placeholder="Ciudad..." autocomplete="off" aria-label="Ciudad" />
+                    <button type="submit" id="buscar" class="weather-btn" aria-label="Buscar ciudad">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button type="button" id="locateBtn" class="weather-btn weather-btn--gold"
+                        aria-label="Usar mi ubicación">
+                        <i class="fas fa-location-arrow"></i>
+                    </button>
+                </form>
+            </article>
+
+            <article class="card ranking-card" id="rankingCard" aria-label="Ranking de ganadores">
+                <span class="card-label">RANKING</span>
+                <p class="ranking-subtitle">Daily Winners</p>
+                <div class="podium" id="rankingList">
+                    <p class="ranking-empty">Sin partidas aún. ¡Juega para entrar al ranking!</p>
+                </div>
+            </article>
+
+            <article class="card news-card-wrapper" id="news-section" aria-label="Titulares">
+                <span class="card-label">TITULARES</span>
+                <div id="newsContainer"></div>
+            </article>
+
+        </div>
+    </section>
+
+    <footer>
+        <nav class="footer-nav" aria-label="Navegación inferior">
+            <button type="button" aria-label="Volver arriba" data-scroll-top>
+                <i class="fas fa-home" aria-hidden="true"></i><br>INICIO
+            </button>
+            <a href="https://adriasu09.github.io/landing-Carnival/#games" target="_blank" rel="noopener" aria-label="Más juegos">
+                <i class="fas fa-gamepad" aria-hidden="true"></i><br>JUEGOS
+            </a>
+            <button type="button" aria-label="Perfil y ajustes" data-open-settings>
+                <i class="fas fa-user" aria-hidden="true"></i><br>PERFIL
+            </button>
+        </nav>
+        <div class="nav-footer">
+            <p>&copy; 2026 Tiro al Blanco • <strong>FemCoders</strong></p>
+        </div>
+    </footer>
+
+    <dialog id="settingsModal" class="settings-modal" aria-labelledby="settingsTitle">
+        <div class="settings-card">
+            <header class="settings-card__header">
+                <h2 class="settings-card__title" id="settingsTitle">Ajustes</h2>
+                <button type="button" class="settings-card__close" data-close-settings aria-label="Cerrar">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </header>
+
+            <label class="settings-row" for="settingsName">
+                <span class="settings-row__label">Nombre</span>
+                <input type="text" id="settingsName" class="settings-input"
+                    maxlength="20" autocomplete="off" placeholder="Tu alias" />
+            </label>
+
+            <div class="settings-row">
+                <span class="settings-row__label">Sonido</span>
+                <button type="button" class="settings-toggle" id="settingsMute" aria-pressed="false">
+                    <i class="fas fa-volume-up" id="settingsMuteIcon" aria-hidden="true"></i>
+                    <span id="settingsMuteText">Activado</span>
                 </button>
             </div>
-        </main>
 
-        <section class="info-section">
-            <div class="info-grid">
-                <article class="card">
-                    <span class="card-label">LOCATION</span>
-                    <h3>Madrid</h3>
-                    <span class="card-sub-info">Spain District</span>
-                </article>
-                <article class="card">
-                    <span class="card-label">DAILY WINNER</span>
-                    <h3>@DuckKing99</h3>
-                    <span class="card-sub-info">1,240 Hits</span>
-                </article>
+            <div class="settings-actions">
+                <button type="button" class="settings-btn settings-btn--danger" id="settingsReset">
+                    <i class="fas fa-trash" aria-hidden="true"></i> Borrar puntuaciones
+                </button>
+                <button type="button" class="settings-btn settings-btn--primary" id="settingsSave">
+                    Guardar y cerrar
+                </button>
             </div>
-        </section>
-
-        <footer>
-            <nav class="footer-nav">
-                <button type="button">INICIO</button>
-                <button type="button">Idiomas</button>
-                <button type="button">Juegos</button>
-                <button type="button">PERFIL</button>
-            </nav>
-            <div class="Navfooter">
-                <a href="#">Condiciones de uso</a> | 
-                <a href="#">Política de privacidad</a> | 
-                <a href="#">Contacto</a>
-                <p>&copy; 2026 Tiro al Blanco. Todos los derechos reservados.</p>
-            </div>
-        </footer>
-    </div>
+        </div>
+    </dialog>
+    
+    <script src="features/api/api-connection.js"></script>
+    <script src="features/api/config.js" defer></script>
+    <script src="features/api/noticias.js" defer></script>
+    <script src="main.js" type="module"></script>
 
 </body>
+
 </html>

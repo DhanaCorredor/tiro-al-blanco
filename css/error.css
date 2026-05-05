@@ -1,0 +1,56 @@
+:root {
+  --bg-dark:       #0c0d14;
+  --bg-card:       #151723;
+  --primary:       #e63946;
+  --primary-hover: #ff3d3d;
+  --primary-dark:  #b02121;
+  --text-white:    #ffffff;
+  --text-gray:     #8e92a4;
+  --gold:          #ffcc00;
+  --glass:         rgba(255, 255, 255, 0.06);
+  --radius-card:   20px;
+  --transition:    0.25s ease;
+
+  /* Error palette */
+  --error-bg:      rgba(230, 57, 70, 0.08);
+  --error-border:  rgba(230, 57, 70, 0.25);
+  --warning-bg:    rgba(255, 204, 0, 0.08);
+  --warning-border:rgba(255, 204, 0, 0.3);
+}
+
+.four_zero_four_bg {
+  background-image: url(bg.gif);
+  height: 500px;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centra verticalmente */
+  align-items: center;     /* Centra horizontalmente */
+  gap: 20px;               /* Espacio entre h1 e imagen */
+}
+
+.four_zero_four_bg img {
+  width: 30%;   /* Ajusta el tamaño según necesites */
+  height: auto;
+}
+
+
+.four_zero_four_bg h1 {
+  font-size: 80px;
+}
+
+.four_zero_four_bg h3 {
+  font-size: 80px;
+}
+
+.link_404 {
+  color: #fff !important;
+  padding: 10px 20px;
+  background: #39ac31;
+  margin: 20px 0;
+  display: inline-block;
+}
+.contant_box_404 {
+  margin-top: -50px;
+}
+

@@ -1,156 +1,885 @@
+/* =========================================================
+   GAME.CSS - Tiro al Blanco de Feria
+   ========================================================= */
+
+/* Área Principal del Juego */
 .game-area {
-  position: relative;
-  background: radial-gradient(circle, #1a1c2c 0%, #05050a 100%);
-  border-radius: 35px;
-  height: 420px;
-  border: 2px solid #23263a;
-  overflow: hidden; /* Importante: oculta patos que salen de la carpa */
-}
-
-/* Toldo de feria */
-.carnival-awning {
-  display: flex;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 20;
-}
-
-.awning-segment {
-  flex: 1;
-  height: 35px;
-  border-bottom-left-radius: 50%;
-  border-bottom-right-radius: 50%;
-}
-.red { background: var(--primary-red); }
-.white { background: #f0f0f0; }
-
-/* Contenedor de patos */
-.duck-gallery-container {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  padding-top: 50px;
-}
-
-/* Filas de movimiento (Carriles) */
-.duck-row {
-  position: absolute;
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-}
-
-/* Estilo de los patos */
-.duck-target {
-  position: absolute;
-  cursor: crosshair;
-  transition: transform 0.2s;
-}
-
-.duck-target img {
-  width: 55px;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-}
-
-/* ANIMACIONES: Los patos cruzan de lado a lado */
-@keyframes moveRight {
-  from { left: -80px; }
-  to { left: 100%; }
-}
-
-@keyframes moveLeft {
-  from { left: 100%; }
-  to { left: -80px; }
-}
-
-/* Aplicación de movimiento (puedes cambiarlas con JS) */
-.animate-right { animation: moveRight 5s linear infinite; }
-.animate-left { animation: moveLeft 4s linear infinite; }
-
-/* Botón PLAY (Overlay) */
-.play-button-container {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 30;
-  border-radius: 35px;
-}
-
-.play-main-btn {
-  background: none;
-  border: 6px solid white;
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 900;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.play-main-btn:hover {
-  transform: scale(1.1);
-  background: var(--primary-red);
-  border-color: var(--primary-red);
-}
-
-/* Efecto cuando disparas al pato */
-.duck-target.hit {
-  transform: scale(0) rotate(180deg);
-  opacity: 0;
-  pointer-events: none;
-}
-@media (min-width: 1024px) {
-  /* Contenedor principal del toldo */
-  .carnival-awning {
-    height: 60px; /* Un poco más alto en PC */
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 550px;
+    margin: 0 15px;
+    border-radius: 30px;
     overflow: hidden;
-    z-index: 10;
-    display: block; /* Asegura que se vea */
-  }
+    background: #87CEEB;
+    border: 3px solid #b02121;
+}
 
-  /* El patrón de ondas repetitivas */
-  .awning-pattern {
+/* TOLDO - Fijo arriba */
+.toldo {
+    width: 100%;
+    height: 80px;
+    position: relative;
+    overflow: hidden;
+    z-index: 15;
+    flex-shrink: 0;
+    background: #b02121;
+}
+
+.rayas {
     width: 100%;
     height: 100%;
-    /* Creamos las franjas rojas y blancas con un degradado repetitivo */
     background: repeating-linear-gradient(
-      to right,
-      var(--primary-red),
-      var(--primary-red) 50px,
-      #f0f0f0 50px,
-      #f0f0f0 100px
+        90deg,
+        #b02121 0px,
+        #e63946 25px,
+        #b02121 50px,
+        #d1d1d1 50px,
+        #ffffff 75px,
+        #d1d1d1 100px
     );
-    position: relative;
-  }
+}
 
-  /* Añadimos el efecto de "ondas" o semicírculos abajo */
-  .awning-pattern::after {
-    content: '';
+.toldo::after {
+    content: "";
     position: absolute;
-    bottom: -15px;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 30px;
-    /* Este patrón crea los semicírculos */
-    background-image: radial-gradient(circle at 50% 0%, var(--primary-red) 50%, transparent 55%),
-                      radial-gradient(circle at 50% 0%, #f0f0f0 50%, transparent 55%);
-    background-size: 100px 30px; /* Debe coincidir con el ancho de las franjas arriba */
-    background-position: 0px 0, 50px 0;
+    height: 25px;
+    background-image: 
+        radial-gradient(circle at 25px 0, #b02121 25px, transparent 26px),
+        radial-gradient(circle at 75px 0, #d1d1d1 25px, transparent 26px);
+    background-size: 100px 25px;
     background-repeat: repeat-x;
-  }
 }
+
+/* Contenido del juego - debajo del toldo */
+.game-content {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* PANTALLAS */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.85);
+    width: 100%;
+    height: 100%;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* PANTALLA DE INICIO */
+#startScreen {
+    /* Gradiente de azul claro a verde claro */
+    background: linear-gradient(180deg, #86CDEA 0%, #90EE90 100%);
+}
+
+#startScreen .level-select {
+    text-align: center;
+    width: 85%;
+    max-width: 320px;
+    padding: 30px 25px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+#startScreen h2 {
+    color: #e63946;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.level-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.level-btn {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.level-btn:hover {
+    border-color: #e63946;
+    background: #fff5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+}
+
+.level-btn.active {
+    background: linear-gradient(135deg, #e63946 0%, #c62828 100%);
+    border-color: #e63946;
+    color: #fff;
+}
+
+.level-btn.active .level-number {
+    background: #fff;
+    color: #e63946;
+}
+
+.level-number {
+    width: 32px;
+    height: 32px;
+    background: #e63946;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+.level-btn.level-2 .level-number { background: #ff8c00; }
+.level-btn.level-3 .level-number { background: #FFD700; color: #000; }
+
+.level-name {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    font-size: 1rem;
+}
+
+.play-btn {
+    margin-top: 20px;
+    padding: 14px 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #32CD32, #228B22);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(50, 205, 50, 0.3);
+    transition: all 0.3s ease;
+}
+
+.play-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #3dd73d, #2ea82e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(50, 205, 50, 0.4);
+}
+
+.play-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+/* PANTALLA DE JUEGO */
+#gameScreen {
+    background: transparent;
+    justify-content: flex-start;
+}
+
+.game-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.55) 100%);
+    border-bottom: 1px solid rgba(255, 204, 0, 0.18);
+}
+
+/* HUD pill (puntos / tiempo) */
+.hud-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.hud-pill__icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.hud-pill--score .hud-pill__icon {
+    background: linear-gradient(135deg, var(--primary-red, #e63946), #b02121);
+    box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+}
+
+.hud-pill--time .hud-pill__icon {
+    background: linear-gradient(135deg, var(--gold, #ffcc00), #c89a00);
+    color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+}
+
+.hud-pill__info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    gap: 2px;
+}
+
+.hud-pill__label {
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 600;
+}
+
+.hud-pill__value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Botón mute en el HUD */
+.hud-mute {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.hud-mute:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+/* Botón PAUSA — circular con glow */
+.pause-floating {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--primary-red, #e63946), #b02121);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 4px 14px rgba(230, 57, 70, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pause-floating::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 204, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.pause-floating:hover {
+    transform: scale(1.08);
+    box-shadow:
+        0 6px 20px rgba(230, 57, 70, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.pause-floating:hover::before {
+    opacity: 1;
+}
+
+.pause-floating:active {
+    transform: scale(0.95);
+}
+
+/* Combo flotante en el canvas */
+.combo-display {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translate(-50%, -10px);
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 6px 16px 4px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.95), rgba(255, 140, 0, 0.95));
+    border: 2px solid var(--gold, #ffcc00);
+    border-radius: 999px;
+    box-shadow: 0 4px 16px rgba(255, 204, 0, 0.45);
+    color: #fff;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.combo-display.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.combo-display.is-bumped {
+    animation: combo-bump 0.35s ease-out;
+}
+
+@keyframes combo-bump {
+    0%   { transform: translate(-50%, 0) scale(1); }
+    40%  { transform: translate(-50%, 0) scale(1.25); }
+    100% { transform: translate(-50%, 0) scale(1); }
+}
+
+.combo-x { font-size: 0.9rem; opacity: 0.85; }
+.combo-value { font-size: 1.6rem; color: var(--gold, #ffcc00); }
+.combo-label {
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+    margin-left: 6px;
+    align-self: center;
+    opacity: 0.85;
+}
+
+/* Pato dorado raro — el movimiento usa moveRight/moveLeft del padre,
+   el brillo se aplica como filtro pulsante */
+.duck.golden {
+    filter: drop-shadow(0 0 12px #ffd700) brightness(1.25) saturate(1.4);
+}
+
+.duck.golden::before,
+.duck.golden::after {
+    background: linear-gradient(135deg, #ffe055 0%, #ffd700 50%, #b88a00 100%) !important;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.8) !important;
+}
+
+/* Confeti — récord */
+.confetti-piece {
+    position: fixed;
+    top: -20px;
+    width: 10px;
+    height: 14px;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 2px;
+    animation: confetti-fall 2.8s linear forwards;
+}
+
+@keyframes confetti-fall {
+    0%   { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+    100% { opacity: 0; transform: translate(var(--dx), 105vh) rotate(var(--rot)); }
+}
+
+/* Banner de "Nuevo récord" */
+.record-banner {
+    color: var(--gold, #ffcc00);
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
+    margin: 8px 0;
+    animation: record-glow 1.4s ease-in-out infinite;
+}
+
+@keyframes record-glow {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 12px rgba(255, 204, 0, 0.6); }
+    50%      { transform: scale(1.06); text-shadow: 0 0 20px rgba(255, 204, 0, 0.95); }
+}
+
+/* Canvas del juego — fondo plano cielo→césped (los globos los pinta el ::before
+   en la sección "ENTORNO DEL JUEGO" de más abajo). */
+#gameCanvas {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 350px;
+    min-height: 300px;
+    background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 45%, #90EE90 45%);
+    overflow: hidden;
+    cursor: crosshair;
+}
+
+/* === PATO === */
+.duck {
+    position: absolute;
+    cursor: crosshair;
+    width: 60px;
+    height: 50px;
+    z-index: 10;
+    transition: transform 0.1s;
+}
+/* Cuerpo */
+.duck::before {
+    content: '';
+    position: absolute;
+    width: 45px;
+    height: 35px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+    border-radius: 50% 50% 45% 45%;
+    top: 10px;
+    left: 5px;
+    box-shadow:
+        inset -5px -5px 10px rgba(0,0,0,0.2),
+        2px 2px 5px rgba(0,0,0,0.3);
+}
+/* Cabeza */
+.duck::after {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-radius: 50%;
+    top: 2px;
+    left: 30px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+/* Ojo */
+.duck .eye {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #000;
+    border-radius: 50%;
+    top: 8px;
+    left: 42px;
+    z-index: 20;
+}
+.duck .eye::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #0C0D14;
+    border-radius: 50%;
+    top: 1px;
+    left: 1px;
+}
+/* Pico */
+.duck .beak {
+    position: absolute;
+    width: 12px;
+    height: 6px;
+    background: linear-gradient(180deg, #FF6600 0%, #FF4500 100%);
+    border-radius: 0 50% 50% 50%;
+    top: 16px;
+    left: 48px;
+    z-index: 20;
+}
+/* Ala */
+.duck .wing {
+    position: absolute;
+    width: 20px;
+    height: 12px;
+    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+    border-radius: 50%;
+    top: 20px;
+    left: 15px;
+    z-index: 15;
+}
+/* ============================
+   ANIMACIONES
+============================ */
+.animate-right {
+    animation: moveRight linear forwards;
+}
+.animate-left {
+    animation: moveLeft linear forwards;
+}
+@keyframes moveRight {
+    from { left: -80px; }
+    to { left: 110%; }
+}
+@keyframes moveLeft {
+    from { left: 110%; }
+    to { left: -80px; }
+}
+/* Impacto */
+.duck.hit {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+}
+
+/* PANTALLA DE PAUSA */
+#pauseScreen {
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 100;
+}
+
+#pauseScreen h2 {
+    font-size: 1.8rem;
+    color: #FFD700;
+    margin-bottom: 25px;
+}
+
+#pauseScreen button {
+    margin: 8px;
+    padding: 10px 25px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+}
+
+#resumeBtn {
+    background: #32CD32;
+    color: #fff;
+}
+
+#exitPauseBtn {
+    background: #e63946;
+    color: #fff;
+}
+
+/* PANTALLA DE GAME OVER */
+#gameOverScreen {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+#gameOverScreen h2 {
+    font-size: 2rem;
+    color: #e63946;
+    margin-bottom: 15px;
+}
+
+#gameOverScreen p {
+    color: #fff;
+    font-size: 1rem;
+    margin: 6px 0;
+}
+
+#gameOverScreen p span {
+    color: #FFD700;
+    font-size: 1.2rem;
+}
+
+#gameOverScreen button {
+    margin-top: 20px;
+    padding: 12px 35px;
+    font-size: 1rem;
+    font-weight: bold;
+    background: #FFD700;
+    color: #000;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* .info-grid layout vive en style.css — evitamos duplicar reglas. */
+/* =========================================================
+   ESTILO MEJORADO DEL BOTÓN DE SONIDO (#muteBtn)
+   ========================================================= */
+#muteBtn {
+    /* Fondo tipo 'cristal' oscuro y semi-transparente */
+    background: rgba(255, 255, 255, 0.1);
+    
+    /* Borde sutil */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    
+    /* Forma redondeada y suave */
+    border-radius: 12px;
+    
+    /* Color del icono (blanco) */
+    color: #ffffff;
+    
+    /* Tamaño del icono */
+    font-size: 1.1rem;
+    
+    /* Espaciado interno para darle forma de botón */
+    padding: 8px 14px;
+    
+    /* Cursor de mano */
+    cursor: pointer;
+    
+    /* Alineación perfecta dentro del Flexbox de la barra */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Sombra suave para darle profundidad */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    
+    /* Preparar la transición para las animaciones */
+    transition: all 0.3s ease;
+    
+    /* Margen para separarlo un poco del texto de Tiempo */
+    margin-left: 15px;
+}
+
+/* --- EFECTO AL PASAR EL RATÓN (HOVER) --- */
+#muteBtn:hover {
+    /* Fondo un poco más claro al hacer hover */
+    background: rgba(255, 255, 255, 0.2);
+    
+    /* Pequeño aumento de tamaño */
+    transform: scale(1.05) translateY(-1px);
+    
+    /* Sombra más pronunciada al elevarse */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    
+    /* El borde se ilumina un poco con el rojo principal */
+    border-color: rgba(230, 57, 70, 0.5);
+}
+
+/* --- EFECTO AL HACER CLIC (ACTIVE) --- */
+#muteBtn:active {
+    /* Vuelve a su tamaño original y la sombra se reduce (efecto 'pulsado') */
+    transform: scale(0.98) translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    
+    /* El fondo se vuelve un poco más oscuro */
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Asegurar que el icono (i) dentro del botón no tenga márgenes raros */
+#muteBtn #muteIcon {
+    margin: 0;
+    line-height: 1;
+}
+/* 3. Ajuste para que los textos no se peguen */
+.control-item {
+    display: flex;
+    gap: 8px; /* Separa la palabra "Puntos:" del valor numérico */
+    align-items: center;
+}
+
+/* =========================================================
+   GAME JUICE — Mirilla, popups, plumas, screen shake, tiempo crítico
+   ========================================================= */
+
+/* Mirilla SVG inline (rojo, igual que el resto del UI) */
+#gameCanvas,
+.duck {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11" fill="none" stroke="%23e63946" stroke-width="2.5"/><circle cx="16" cy="16" r="2.5" fill="%23e63946"/><line x1="16" y1="2" x2="16" y2="9" stroke="%23e63946" stroke-width="2.5"/><line x1="16" y1="23" x2="16" y2="30" stroke="%23e63946" stroke-width="2.5"/><line x1="2" y1="16" x2="9" y2="16" stroke="%23e63946" stroke-width="2.5"/><line x1="23" y1="16" x2="30" y2="16" stroke="%23e63946" stroke-width="2.5"/></svg>') 16 16, crosshair;
+}
+
+/* Popup de puntos al acertar */
+.score-popup {
+    position: absolute;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    color: var(--gold, #ffcc00);
+    font-weight: 900;
+    font-size: 1.6rem;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 0 12px rgba(255, 204, 0, 0.5);
+    z-index: 30;
+    animation: score-float 0.85s ease-out forwards;
+}
+
+@keyframes score-float {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    20%  { opacity: 1; transform: translate(-50%, -60%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -180%) scale(1.4); }
+}
+
+/* Plumas que salen al acertar */
+.feather {
+    position: absolute;
+    width: 8px;
+    height: 14px;
+    background: linear-gradient(180deg, #fff 0%, #ffe9a3 100%);
+    border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 25;
+    animation: feather-fall 0.9s ease-out forwards;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes feather-fall {
+    0%   { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
+    100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot));
+    }
+}
+
+/* Screen shake en el canvas al acertar */
+#gameCanvas.is-shaking {
+    animation: canvas-shake 0.22s ease-in-out;
+}
+
+@keyframes canvas-shake {
+    0%, 100% { transform: translate(0, 0); }
+    25%      { transform: translate(-4px, 1px); }
+    50%      { transform: translate(3px, -2px); }
+    75%      { transform: translate(-2px, 2px); }
+}
+
+/* Tiempo crítico (últimos 5s) */
+.time-value.is-critical {
+    color: var(--primary-red, #e63946) !important;
+    text-shadow: 0 0 12px rgba(230, 57, 70, 0.8);
+    animation: time-pulse 0.8s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes time-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.2); }
+}
+
+/* =========================================================
+   ENTORNO DEL JUEGO — globos decorativos (fondo se queda como antes)
+   ========================================================= */
+
+/* Globos flotando suavemente en la parte superior del canvas */
+#gameCanvas::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    height: 70px;
+    pointer-events: none;
+    z-index: 1;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-position: 6% 0, 92% 12px, 48% 6px;
+    background-image:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="60" viewBox="0 0 36 60"><ellipse cx="18" cy="20" rx="14" ry="17" fill="%23e63946"/><ellipse cx="13" cy="14" rx="3" ry="5" fill="rgba(255,255,255,0.35)"/><polygon points="15,36 21,36 18,42" fill="%23b02121"/><path d="M18 42 Q20 50 18 60" stroke="%23333" stroke-width="0.8" fill="none"/></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="34" height="58" viewBox="0 0 34 58"><ellipse cx="17" cy="19" rx="13" ry="16" fill="%23ffcc00"/><ellipse cx="12" cy="13" rx="3" ry="4.5" fill="rgba(255,255,255,0.4)"/><polygon points="14,34 20,34 17,40" fill="%23c89a00"/><path d="M17 40 Q15 48 17 58" stroke="%23333" stroke-width="0.8" fill="none"/></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="55" viewBox="0 0 32 55"><ellipse cx="16" cy="18" rx="12" ry="15" fill="%2360a5fa"/><ellipse cx="11" cy="12" rx="2.5" ry="4" fill="rgba(255,255,255,0.4)"/><polygon points="13,32 19,32 16,38" fill="%231e40af"/><path d="M16 38 Q18 46 16 55" stroke="%23333" stroke-width="0.8" fill="none"/></svg>');
+    animation: balloons-float 5s ease-in-out infinite;
+    opacity: 0.85;
+}
+
+@keyframes balloons-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+}
+
+/* =========================================================
+   PANTALLA DE NOMBRE — mismo estilo que el menú de niveles
+   ========================================================= */
+
+#nameScreen {
+    background: linear-gradient(180deg, #86CDEA 0%, #90EE90 100%);
+    padding: 20px;
+}
+
+.name-card {
+    width: 85%;
+    max-width: 320px;
+    padding: 30px 25px 25px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    animation: card-pop 0.4s ease-out;
+}
+
+@keyframes card-pop {
+    0%   { opacity: 0; transform: translateY(20px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.name-card__mascot {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    margin: 0 auto 8px;
+    display: block;
+    animation: mascot-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes mascot-bob {
+    0%, 100% { transform: translateY(0)    rotate(-2deg); }
+    50%      { transform: translateY(-6px) rotate(2deg); }
+}
+
+.name-card__title {
+    color: #e63946;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.name-card__sub {
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+
+.name-card__form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.name-card__input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    color: #333;
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.name-card__input:focus {
+    border-color: #e63946;
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+}
+
+.name-card__input::placeholder {
+    color: #aaa;
+}
+
+.name-card__error {
+    color: #e63946;
+    font-size: 0.78rem;
+    min-height: 1em;
+    margin: 0;
+}
+
+/* El botón usa el .play-btn original (verde) — no se hace override */
