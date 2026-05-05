@@ -4,10 +4,15 @@
 
 export default {
   async fetch(request) {
-    const apiKey = process.env.GNEWS_API_KEY;
+    // Trim por si Vercel guardó espacios al copiar/pegar la key.
+    const apiKey = (process.env.GNEWS_API_KEY ?? '').trim();
     if (!apiKey) {
       return Response.json(
-        { error: 'GNEWS_API_KEY no está configurada en Vercel.' },
+        {
+          error:
+            'GNEWS_API_KEY no llegó a este deployment. Configúrala en Vercel → Settings → Environment Variables (Production), guarda y redeploy.',
+          envVarPresent: 'GNEWS_API_KEY' in process.env
+        },
         { status: 500 }
       );
     }

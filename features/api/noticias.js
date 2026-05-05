@@ -30,7 +30,9 @@ async function fetchNews() {
       let detail = `HTTP ${response.status}`;
       try {
         const body = await response.json();
-        if (Array.isArray(body?.errors)) {
+        if (typeof body?.error === 'string') {
+          detail = body.error;
+        } else if (Array.isArray(body?.errors)) {
           detail = body.errors.join(' · ');
         } else if (body?.errors && typeof body.errors === 'object') {
           detail = Object.values(body.errors).flat().join(' · ');
