@@ -133,9 +133,10 @@ dist
 .pnp.*
 
 ### Project ###
-# Configuración local con claves de API (cada persona crea su propio config.js
-# a partir de config.example.js).
-features/api/config.js
+# Variables de entorno locales (la API key real vive aquí en dev,
+# y como Variable de Entorno en Vercel para producción).
+.env
+.env.local
 
 ### Node Patch ###
 # Serverless Webpack directories

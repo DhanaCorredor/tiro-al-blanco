@@ -1,8 +1,6 @@
-// Sistema de sonido corregido
 const sounds = {
-    // Usamos '../' para salir de la carpeta 'Sound' y entrar en 'assets'
-    background: new Audio('../assets/sound/circus.wav'),
-    hit: new Audio('../assets/sound/patosound.wav')
+    background: new Audio('assets/sound/circus.wav'),
+    hit: new Audio('assets/sound/patosound.wav')
 };
 
 const volumes = {

@@ -1,36 +1,25 @@
-const NEWS_API_URL = 'https://gnews.io/api/v4/search';
+// Llamamos a /api/news (serverless function en Vercel) en vez de GNews
+// directamente — la API key vive en el servidor, no en el navegador.
+const NEWS_API_URL = '/api/news';
 const FALLBACK_IMAGE =
   'https://repararelpc.es/wp-content/uploads/2021/07/tecnologia.png';
 const ROTATE_INTERVAL = 6000;
+const DEFAULT_QUERY = 'tecnologia';
+const MAX_RESULTS = 3;
 
 let currentIndex = 0;
 let rotateTimer = null;
-
-function getConfig() {
-  const cfg = window.NEWS_CONFIG;
-  if (!cfg || !cfg.apiKey || cfg.apiKey === 'TU_API_KEY_DE_GNEWS') return null;
-  return cfg;
-}
 
 async function fetchNews() {
   const container = document.getElementById('newsContainer');
   if (!container) return;
 
-  const cfg = getConfig();
-  if (!cfg) {
-    container.innerHTML =
-      '<p class="news-status news-status--error">Falta configurar la API key. Copia <code>features/api/config.example.js</code> como <code>config.js</code> y pega tu clave de GNews.</p>';
-    return;
-  }
-
   container.innerHTML = '<p class="news-status">Cargando noticias...</p>';
 
   try {
     const params = new URLSearchParams({
-      q: cfg.defaultQuery ?? 'tecnologia',
-      lang: 'es',
-      max: String(cfg.maxResults ?? 3),
-      apikey: cfg.apiKey
+      q: DEFAULT_QUERY,
+      max: String(MAX_RESULTS)
     });
 
     const response = await fetch(`${NEWS_API_URL}?${params}`);
