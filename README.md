@@ -140,4 +140,4 @@ Proyecto de formación en Frontend Developer · Factoría F5 · 2026.
 
 ## ✅ Estado
 
-Funcional y desplegado.
+Funcional y desplegado en vercel → https://tiro-al-blanco-ten.vercel.app
