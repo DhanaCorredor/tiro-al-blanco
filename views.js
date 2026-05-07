@@ -143,7 +143,7 @@ export function initSettings() {
     const saveBtn = document.getElementById('settingsSave');
 
     const open = () => {
-        nameInput.value = getPlayerName() ?? '';
+        if (nameInput) nameInput.value = getPlayerName() ?? '';
         syncMuteUI(getMuteState());
         if (typeof modal.showModal === 'function') modal.showModal();
         else modal.setAttribute('open', '');
@@ -176,7 +176,7 @@ export function initSettings() {
     });
 
     saveBtn?.addEventListener('click', () => {
-        const newName = nameInput.value.trim();
+        const newName = nameInput?.value.trim() ?? '';
         if (newName.length >= 2) {
             savePlayerName(newName);
             updateDailyWinnerView();

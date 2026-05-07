@@ -18,15 +18,24 @@
   --warning-border:rgba(255, 204, 0, 0.3);
 }
 
+.page_404 {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: var(--text-white);
+}
+
 .four_zero_four_bg {
-  background-image: url(bg.gif);
   height: 500px;
-  background-position: center;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(230, 57, 70, 0.18) 0%, transparent 60%),
+    radial-gradient(circle at 50% 70%, rgba(255, 204, 0, 0.10) 0%, transparent 60%);
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centra verticalmente */
-  align-items: center;     /* Centra horizontalmente */
-  gap: 20px;               /* Espacio entre h1 e imagen */
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
 
 .four_zero_four_bg img {

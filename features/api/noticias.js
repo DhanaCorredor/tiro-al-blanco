@@ -213,4 +213,6 @@ function createNewsCard(article) {
   return card;
 }
 
-document.addEventListener('DOMContentLoaded', fetchNews);
+// El script se carga con `defer` desde index.html, así que el DOM ya está
+// parseado cuando llegamos aquí — no hace falta esperar a DOMContentLoaded.
+fetchNews();

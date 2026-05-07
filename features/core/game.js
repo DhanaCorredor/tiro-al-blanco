@@ -137,8 +137,11 @@ export const game = {
             }, 300);
         });
 
-        // Remover pato al terminar animación (escape sin acierto → rompe combo)
+        // Remover pato al terminar animación (escape sin acierto → rompe combo).
+        // Si el juego está pausado/terminado, no contabilizamos como fallo —
+        // el pato ya habrá sido limpiado por pauseGame()/endGame().
         setTimeout(() => {
+            if (!this.isPlaying) return;
             if (duck.parentNode && !duck.classList.contains('hit')) {
                 this.shots++;
                 this.combo = 0;
@@ -153,7 +156,9 @@ export const game = {
         this.isPlaying = false;
         this.stopIntervals();
 
-        // Comprobar récord ANTES de guardar (saveScore solo guarda si supera)
+        // Comprobar récord personal ANTES de guardar — getBestScores incluye
+        // la partida actual una vez la hemos guardado, así que el "previo"
+        // tiene que leerse antes.
         const previousBest = getBestScores()[this.currentLevel]?.score ?? 0;
         const isRecord = this.score > previousBest && this.score > 0;
 
@@ -165,16 +170,19 @@ export const game = {
         showGameOver(this.score, this.hits, accuracy, isRecord);
     },
 
-    // Pausar el juego
+    // Pausar el juego — limpiamos los patos en vuelo para que no terminen
+    // su animación CSS por su cuenta y el combo no se rompa al reanudar.
     pauseGame() {
         this.isPlaying = false;
         this.stopIntervals();
+        this.clearCanvas();
     },
 
     // Reanudar el juego
     resumeGame() {
         this.isPlaying = true;
         this.startTimer();
+        this.spawnDuck();
         this.startSpawning();
     },
 

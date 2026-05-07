@@ -83,7 +83,7 @@ tiro-al-blanco/
 ├── views.js                   # Pantallas, HUD, confeti, combo
 ├── main.js                    # Punto de entrada
 ├── index.html
-├── package.json               # type: module (necesario para las functions)
+├── package.json               # type: module (ES Modules en el frontend)
 ├── .env.example               # Plantilla de variables de entorno
 └── README.md
 ```
