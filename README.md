@@ -76,6 +76,12 @@ tiro-al-blanco/
 │       ├── game.js            # Bucle principal, patos, combo, dorado
 │       ├── score.js           # Render del podio
 │       └── storage.js         # localStorage
+├── home/                      # Galería de juegos del equipo (ver "Créditos")
+│   ├── index.html
+│   ├── main.js
+│   ├── games.js
+│   ├── style/main.css
+│   └── assets/
 ├── pages/
 │   └── error.html
 ├── sound/
@@ -137,6 +143,10 @@ Cualquier `git push` a `main` redespliega automáticamente.
 **[Dhana Corredor]**
 - GitHub: [@DhanaCorredor](https://github.com/DhanaCorredor)
 Proyecto de formación en Frontend Developer · Factoría F5 · 2026.
+
+## 🙏 Créditos
+
+La galería de juegos en `home/` está adaptada del proyecto [landing-Carnival](https://github.com/adriasu09/landing-Carnival) creado por [@adriasu09](https://github.com/adriasu09), compañera del equipo AZARGame en Factoría F5. La he integrado en mi propio repositorio para que el portfolio sea autocontenido y para enlazar a mi juego desde una galería propia.
 
 ## ✅ Estado
 

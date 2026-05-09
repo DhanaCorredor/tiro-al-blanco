@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carnival DOM — La Feria Digital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style/main.css?v=2" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="navbar__inner">
+        <a class="navbar__logo" href="#">
+          <img
+            src="./assets/icons/logo-icon.svg"
+            alt="AZAR logo"
+            class="navbar__logo-icon"
+          />
+          <span class="navbar__logo-text">AZARGame</span>
+        </a>
+        <nav class="navbar__links" aria-label="Principal">
+          <a href="#" class="navbar__link navbar__link--active">Inicio</a>
+          <a href="#games" class="navbar__link">Juegos</a>
+          <a href="#" class="navbar__link">Acerca de</a>
+        </nav>
+        <a href="#games" class="btn btn--primary btn--sm">Jugar Ahora</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <span class="pill">WELCOME TO THE CARNIVAL</span>
+        <h1 class="hero__title">
+          <span class="hero__title-line">Carnival DOM:</span>
+          <span class="hero__title-line hero__title-line--gradient"
+            >La Feria Digital</span
+          >
+        </h1>
+        <p class="hero__desc">
+          Explora nuestra nueva línea de juegos clásicos de feria desarrollados
+          por el equipo de AZARGame. 5 experiencias únicas creadas con
+          JavaScript, HTML y CSS.
+        </p>
+        <div class="hero__buttons">
+          <a href="#games" class="btn btn--primary">Explorar Juegos</a>
+          <a href="#features" class="btn btn--ghost">Saber Más</a>
+        </div>
+      </section>
+
+      <section class="gallery" id="games">
+        <div class="gallery__header">
+          <div class="gallery__heading">
+            <h2 class="gallery__title">Galería de Juegos</h2>
+            <p class="gallery__subtitle">
+              Experiencias retro reinventadas para la web moderna.
+            </p>
+          </div>
+          <span class="badge">
+            <span class="badge__dot" aria-hidden="true"></span>
+            5 ACTIVOS
+          </span>
+        </div>
+        <div class="bento" id="games-grid">
+          <!-- Las tarjetas se inyectan desde main.js -->
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <div class="features__image">
+          <img
+            src="./assets/img/features.png"
+            alt="Ilustración de la experiencia Carnival DOM"
+          />
+        </div>
+        <div class="features__content">
+          <h2 class="features__title">
+            <span>Una experiencia construida con</span>
+            <span class="features__title--accent">pasión por el código.</span>
+          </h2>
+          <ul class="features__list">
+            <li class="feature">
+              <h3 class="feature__name">⌨️ JavaScript Nativo</h3>
+              <p class="feature__desc">
+                Lógica sin frameworks, exprimiendo el potencial de la web
+                moderna.
+              </p>
+            </li>
+            <li class="feature">
+              <h3 class="feature__name">🔲 DOM Manipulation</h3>
+              <p class="feature__desc">
+                Actualizaciones en tiempo real suaves como la seda para una
+                respuesta inmediata.
+              </p>
+            </li>
+            <li class="feature">
+              <h3 class="feature__name">✨ Visuales Premium</h3>
+              <p class="feature__desc">
+                CSS3 avanzado con degradados y efectos de cristal para una
+                inmersión total.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__left">
+        <span class="footer__logo">🎡 AZARGame</span>
+        <span class="footer__copy"
+          >© 2026 AZARGame Carnival DOM. All rights reserved.</span
+        >
+      </div>
+      <nav class="footer__links" aria-label="Legal y redes">
+        <a href="#" class="footer__link">Privacy Policy</a>
+        <a href="#" class="footer__link">Terms of Service</a>
+        <a href="#" class="footer__link">Discord</a>
+        <a href="#" class="footer__link">Twitter</a>
+      </nav>
+    </footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
