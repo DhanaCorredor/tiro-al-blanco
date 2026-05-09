@@ -3,7 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carnival DOM — La Feria Digital</title>
+    <title>Carnival Ducks | Galería</title>
+    <meta name="description" content="Galería de juegos clásicos de feria construidos con JavaScript vanilla, HTML5 y CSS3 — Factoría F5 · 2026." />
+
+    <!-- Open Graph / redes sociales -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Carnival Ducks | Galería de Juegos" />
+    <meta property="og:description" content="Cinco experiencias retro reinventadas para la web moderna. JavaScript vanilla, sin frameworks." />
+    <meta property="og:image" content="https://tiro-al-blanco-ten.vercel.app/home/assets/img/features.jpg" />
+    <meta property="og:url" content="https://tiro-al-blanco-ten.vercel.app/home/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Carnival Ducks | Galería de Juegos" />
+    <meta name="twitter:description" content="Cinco experiencias retro reinventadas para la web moderna." />
+    <meta name="twitter:image" content="https://tiro-al-blanco-ten.vercel.app/home/assets/img/features.jpg" />
+
+    <link rel="icon" href="./assets/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,18 +31,18 @@
       <div class="navbar__inner">
         <a class="navbar__logo" href="#">
           <img
-            src="./assets/icons/logo-icon.svg"
-            alt="AZAR logo"
+            src="./assets/logo.png"
+            alt="Carnival Ducks logo"
             class="navbar__logo-icon"
           />
-          <span class="navbar__logo-text">AZARGame</span>
+          <span class="navbar__logo-text">Carnival Ducks</span>
         </a>
         <nav class="navbar__links" aria-label="Principal">
           <a href="#" class="navbar__link navbar__link--active">Inicio</a>
           <a href="#games" class="navbar__link">Juegos</a>
-          <a href="#" class="navbar__link">Acerca de</a>
+          <a href="/" class="navbar__link">Mi juego</a>
         </nav>
-        <a href="#games" class="btn btn--primary btn--sm">Jugar Ahora</a>
+        <a href="/" class="btn btn--primary btn--sm">Jugar Ahora</a>
       </div>
     </header>
 
@@ -42,9 +56,9 @@
           >
         </h1>
         <p class="hero__desc">
-          Explora nuestra nueva línea de juegos clásicos de feria desarrollados
-          por el equipo de AZARGame. 5 experiencias únicas creadas con
-          JavaScript, HTML y CSS.
+          Cinco juegos clásicos de feria reinventados para la web moderna.
+          Experiencias creadas con JavaScript, HTML y CSS por el equipo
+          en Factoría F5.
         </p>
         <div class="hero__buttons">
           <a href="#games" class="btn btn--primary">Explorar Juegos</a>
@@ -73,7 +87,7 @@
       <section class="features" id="features">
         <div class="features__image">
           <img
-            src="./assets/img/features.png"
+            src="./assets/img/features.jpg"
             alt="Ilustración de la experiencia Carnival DOM"
           />
         </div>
@@ -111,16 +125,14 @@
 
     <footer class="footer">
       <div class="footer__left">
-        <span class="footer__logo">🎡 AZARGame</span>
+        <span class="footer__logo">🎯 Carnival Ducks</span>
         <span class="footer__copy"
-          >© 2026 AZARGame Carnival DOM. All rights reserved.</span
+          >© 2026 Carnival Ducks · <strong>FemCoders</strong></span
         >
       </div>
-      <nav class="footer__links" aria-label="Legal y redes">
-        <a href="#" class="footer__link">Privacy Policy</a>
-        <a href="#" class="footer__link">Terms of Service</a>
-        <a href="#" class="footer__link">Discord</a>
-        <a href="#" class="footer__link">Twitter</a>
+      <nav class="footer__links" aria-label="Enlaces">
+        <a href="/" class="footer__link">Jugar</a>
+        <a href="https://github.com/DhanaCorredor/tiro-al-blanco" target="_blank" rel="noopener" class="footer__link">GitHub</a>
       </nav>
     </footer>
 

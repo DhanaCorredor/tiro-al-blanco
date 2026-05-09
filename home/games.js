@@ -7,7 +7,7 @@ export const games = [
         id: "random-lucky",
         title: "Random Lucky",
         tag: "AZAR EXCLUSIVE",
-        image: "./assets/img/random-lucky.png",
+        image: "./assets/img/random-lucky.jpg",
         cta: "PLAY NOW",
         accent: "yellow",
         featured: true,
@@ -17,7 +17,7 @@ export const games = [
         id: "parejas",
         title: "Parejas",
         description: "Entrena tu memoria",
-        image: "./assets/img/parejas.png",
+        image: "./assets/img/parejas.jpg",
         cta: "Launch",
         accent: "cyan",
         layout: "wide",
@@ -26,7 +26,7 @@ export const games = [
     {
         id: "trileros",
         title: "Trileros",
-        image: "./assets/img/trileros.png",
+        image: "./assets/img/trileros.jpg",
         cta: "Bet",
         accent: "purple",
         url: "https://lexyarraez.github.io/game-trileros/"
@@ -34,7 +34,7 @@ export const games = [
     {
         id: "tiro-al-blanco",
         title: "Tiro al blanco",
-        image: "./assets/img/tiro-al-blanco.png",
+        image: "./assets/img/tiro-al-blanco.jpg",
         cta: "Aim",
         accent: "pink",
         url: "/"
@@ -42,7 +42,7 @@ export const games = [
     {
         id: "piedra-papel-tijera",
         title: "Piedra / Papel / Tijera",
-        image: "./assets/img/piedra-papel-tijera.png",
+        image: "./assets/img/piedra-papel-tijera.jpg",
         cta: "Fight!",
         accent: "orange",
         url: "https://rock-paper-scissors-psi-gray.vercel.app/"

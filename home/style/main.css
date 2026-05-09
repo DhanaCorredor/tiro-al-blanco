@@ -10,6 +10,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -38,21 +39,22 @@ button {
 
 /* ---------- Variables ---------- */
 :root {
-  --bg: #0c0d14;
+  --bg-dark: #0c0d14;
   --bg-alt: #0a0b11;
-  --card: #161728;
+  --bg-card: #161728;
   --card-hover: #1c1e34;
   --border: #1e2035;
   --border-soft: #2d2e4544;
 
-  --purple: #6842ff;
-  --purple-light: #9b7dff;
-  --purple-pill: #a78bff;
-  --purple-bg: #6842ff26;
-  --purple-border: #6842ff66;
+  /* Paleta principal: rojo + dorado (feria) — alineada con el juego. */
+  --primary-red: #e63946;
+  --primary-hover: #ff3d3d;
+  --gold: #ffcc00;
+  --primary-bg: #e6394626;
+  --primary-border: #e6394666;
 
-  --text: #ffffff;
-  --text-muted: #8b8fa8;
+  --text-white: #ffffff;
+  --text-gray: #8b8fa8;
 
   --accent-green: #06d6a0;
   --accent-yellow: #c8ff00;
@@ -80,8 +82,8 @@ body {
     "Segoe UI",
     Roboto,
     sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg-dark);
+  color: var(--text-white);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -114,21 +116,21 @@ body {
 }
 
 .btn--primary {
-  background: var(--purple);
+  background: var(--primary-red);
 }
 
 .btn--primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px -12px var(--purple);
+  box-shadow: 0 12px 32px -12px var(--primary-red);
 }
 
 .btn--ghost {
   background: transparent;
-  border-color: var(--purple);
+  border-color: var(--primary-red);
 }
 
 .btn--ghost:hover {
-  background: var(--purple-bg);
+  background: var(--primary-bg);
   transform: translateY(-2px);
 }
 
@@ -157,12 +159,14 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--text);
+  color: var(--text-white);
   flex-shrink: 0;
 }
 
 .navbar__logo-icon {
-  width: 15px;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .navbar__logo-text {
@@ -179,16 +183,16 @@ body {
 .navbar__link {
   font-size: 15px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text-gray);
   transition: color 0.2s var(--ease);
 }
 
 .navbar__link:hover {
-  color: var(--text);
+  color: var(--text-white);
 }
 
 .navbar__link--active {
-  color: var(--purple-light);
+  color: var(--primary-hover);
   font-weight: 600;
 }
 
@@ -209,9 +213,9 @@ body {
   align-items: center;
   padding: 8px 20px;
   border-radius: var(--radius-pill);
-  background: var(--purple-bg);
-  border: 1px solid var(--purple-border);
-  color: var(--purple-pill);
+  background: var(--primary-bg);
+  border: 1px solid var(--primary-border);
+  color: var(--gold);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -229,7 +233,7 @@ body {
 }
 
 .hero__title-line--gradient {
-  background: linear-gradient(180deg, #6842ff 0%, #ff2d78 100%);
+  background: linear-gradient(180deg, #e63946 0%, #ffcc00 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -240,7 +244,7 @@ body {
   max-width: 580px;
   font-size: 16px;
   line-height: 1.7;
-  color: var(--text-muted);
+  color: var(--text-gray);
 }
 
 .hero__buttons {
@@ -274,7 +278,7 @@ body {
 
 .gallery__subtitle {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-gray);
   margin-top: 4px;
 }
 
@@ -338,7 +342,7 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--card);
+  background: var(--bg-card);
   border-radius: var(--radius-md);
   overflow: hidden;
   color: #fff;
@@ -425,7 +429,7 @@ body {
 
 .card__desc {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-gray);
 }
 
 .card__btn {
@@ -467,14 +471,14 @@ body {
 /* Accent colours para los botones de cada card */
 .card[data-accent="yellow"] .card__btn {
   background: var(--accent-yellow);
-  color: var(--bg);
+  color: var(--bg-dark);
 }
 .card[data-accent="cyan"] .card__btn {
   background: var(--accent-cyan);
-  color: var(--bg);
+  color: var(--bg-dark);
 }
 .card[data-accent="purple"] .card__btn {
-  background: var(--purple);
+  background: var(--primary-red);
 }
 .card[data-accent="pink"] .card__btn {
   background: var(--accent-pink);
@@ -591,7 +595,7 @@ body {
 }
 
 .features__title--accent {
-  color: var(--purple);
+  color: var(--primary-red);
 }
 
 .features__list {
@@ -615,7 +619,7 @@ body {
 .feature__desc {
   font-size: 13px;
   line-height: 1.5;
-  color: var(--text-muted);
+  color: var(--text-gray);
 }
 
 /* ---------- Footer ---------- */
@@ -646,7 +650,7 @@ body {
 
 .footer__copy {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-gray);
 }
 
 .footer__links {
@@ -657,12 +661,12 @@ body {
 
 .footer__link {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-gray);
   transition: color 0.2s var(--ease);
 }
 
 .footer__link:hover {
-  color: var(--text);
+  color: var(--text-white);
 }
 
 /* =========================================================
