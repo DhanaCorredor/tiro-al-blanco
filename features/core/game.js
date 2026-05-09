@@ -1,7 +1,7 @@
 // game.js
 import { updateHUD, showGameOver, updateCombo } from '../../views.js';
 import { getLevel } from '../../data/levels.js';
-import { playSound } from '../../Sound/sound.js'; // Importamos el sistema de sonido
+import { playSound } from '../../sound/sound.js';
 import { saveScore, getBestScores } from './storage.js';
 import { updateDailyWinnerView } from './score.js';
 

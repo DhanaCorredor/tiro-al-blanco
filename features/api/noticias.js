@@ -213,6 +213,6 @@ function createNewsCard(article) {
   return card;
 }
 
-// El script se carga con `defer` desde index.html, así que el DOM ya está
-// parseado cuando llegamos aquí — no hace falta esperar a DOMContentLoaded.
+// Los <script type="module"> se difieren por defecto, así que cuando el
+// grafo de módulos llega aquí el DOM ya está parseado.
 fetchNews();

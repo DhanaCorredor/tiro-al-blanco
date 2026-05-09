@@ -1,7 +1,7 @@
 import { game } from './features/core/game.js';
 import { updateDailyWinnerView } from './features/core/score.js';
 import { savePlayerName, getPlayerName, clearScores } from './features/core/storage.js';
-import { toggleMute, getMuteState } from './Sound/sound.js';
+import { toggleMute, getMuteState } from './sound/sound.js';
 
 
 export function initUsernameFlow() {

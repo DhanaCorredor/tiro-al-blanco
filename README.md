@@ -78,7 +78,7 @@ tiro-al-blanco/
 │       └── storage.js         # localStorage
 ├── pages/
 │   └── error.html
-├── Sound/
+├── sound/
 │   └── sound.js               # Música y efectos
 ├── views.js                   # Pantallas, HUD, confeti, combo
 ├── main.js                    # Punto de entrada
@@ -141,3 +141,7 @@ Proyecto de formación en Frontend Developer · Factoría F5 · 2026.
 ## ✅ Estado
 
 Funcional y desplegado en vercel → https://tiro-al-blanco-ten.vercel.app
+
+## 📄 Licencia
+
+Este proyecto está bajo licencia [MIT](LICENSE) — eres libre de usarlo, modificarlo y distribuirlo.

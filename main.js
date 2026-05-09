@@ -10,7 +10,12 @@ import {
     playBackgroundMusic,
     pauseBackgroundMusic,
     toggleMute
-} from './Sound/sound.js';
+} from './sound/sound.js';
+// Side-effect imports: estos módulos se autoinicializan (form de clima,
+// fetch de noticias). Antes se cargaban como <script defer> aparte; ahora
+// van por el grafo de módulos para ser consistentes.
+import './features/api/api-connection.js';
+import './features/api/noticias.js';
 
 initUsernameFlow();
 initViewListeners();
