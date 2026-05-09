@@ -1,8 +1,14 @@
 # 🎯 Tiro al Blanco
 
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Stack](https://img.shields.io/badge/JS-Vanilla-f7df1e)
+![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000)
+![Mobile](https://img.shields.io/badge/Mobile-First-06d6a0)
+
 Juego web interactivo inspirado en las casetas de tiro de feria. Apunta y dispara a los patos en movimiento antes de que se acabe el tiempo. Incluye 3 niveles, sistema de combo, ranking diario y datos en vivo de clima y noticias.
 
 🌐 **Demo en vivo:** https://tiro-al-blanco-ten.vercel.app
+🎨 **Galería del equipo:** https://tiro-al-blanco-ten.vercel.app/home/
 
 ---
 
@@ -26,6 +32,7 @@ Juego web interactivo inspirado en las casetas de tiro de feria. Apunta y dispar
 - Efectos visuales: mirilla, plumas al acertar, screen shake, tiempo crítico pulsante
 - Diseño responsive (Mobile First)
 - Modal de ajustes (cambiar nombre, mute, borrar puntuaciones)
+- **Galería interna** en `/home/` con los juegos del equipo, integrada en el propio repositorio
 
 ## 🌍 Integraciones externas
 
@@ -52,6 +59,24 @@ navegador  →  /api/weather   →  OpenWeatherMap
 ```
 
 Esos endpoints son **Serverless Functions** que viven en `api/` y leen las claves desde variables de entorno del servidor (`GNEWS_API_KEY`, `OPENWEATHER_API_KEY`). Las keys nunca llegan al cliente, así que no se pueden extraer abriendo DevTools. Además se cachean 10 min en el CDN de Vercel para no quemar la cuota gratuita.
+
+## ⚡ Optimización
+
+Decisiones de rendimiento aplicadas, no por defecto:
+
+- **Movimiento del pato**: animaciones con `transform: translateX()` (acelerado por GPU) en vez de `left`. Cero recálculo de layout durante el bucle del juego.
+- **`will-change: transform`** en los patos para que el navegador prepare una capa de composición.
+- **`DocumentFragment`** para insertar las plumas en un solo reflow en vez de N.
+- **CDN cache** de 10 minutos en las serverless functions (`s-maxage=600, stale-while-revalidate`).
+- **Imágenes de la galería optimizadas**: PNG → JPG calidad 85, redimensionadas a max 800px de ancho. Pasaron de 4.5 MB a 381 KB (-92%).
+- **Mobile**: `-webkit-tap-highlight-color: transparent` (sin recuadro oscuro al tocar) y `touch-action: manipulation` en el canvas (sin retraso de 300 ms del double-tap).
+
+## 🔍 SEO y compartibilidad
+
+- `<meta name="description">` en ambas vistas para resultados de búsqueda.
+- **Open Graph + Twitter Cards** en juego y galería: cuando alguien comparte la URL en LinkedIn, Slack o WhatsApp, aparece preview con imagen, título y descripción.
+- **Favicon** (patito) coherente entre vistas.
+- **Preconnect** a Google Fonts para acelerar la primera carga de Inter.
 
 ## 🧱 Estructura
 
@@ -91,6 +116,7 @@ tiro-al-blanco/
 ├── index.html
 ├── package.json               # type: module (ES Modules en el frontend)
 ├── .env.example               # Plantilla de variables de entorno
+├── LICENSE                    # MIT
 └── README.md
 ```
 
