@@ -390,19 +390,21 @@
     background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 45%, #90EE90 45%);
     overflow: hidden;
     cursor: crosshair;
+    touch-action: manipulation;
 }
 
 /* === PATO === */
 .duck {
     position: absolute;
+    left: 0;
     cursor: crosshair;
     width: 60px;
     height: 50px;
     z-index: 10;
-    transition: transform 0.1s;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
+    will-change: transform;
 }
 /* Cuerpo */
 .duck::before {
@@ -483,19 +485,21 @@
     animation: moveLeft linear forwards;
 }
 @keyframes moveRight {
-    from { left: -80px; }
-    to { left: 110%; }
+    from { transform: translateX(-80px); }
+    to { transform: translateX(var(--travel, 100vw)); }
 }
 @keyframes moveLeft {
-    from { left: 110%; }
-    to { left: -80px; }
+    from { transform: translateX(var(--travel, 100vw)); }
+    to { transform: translateX(-80px); }
 }
-/* Impacto */
+/* Impacto — usamos scale/rotate (props independientes) para no pisar
+   el translateX de la animación de movimiento. */
 .duck.hit {
-    transform: scale(0) rotate(180deg);
+    scale: 0;
+    rotate: 180deg;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s;
+    transition: scale 0.3s, rotate 0.3s, opacity 0.3s;
 }
 
 /* PANTALLA DE PAUSA */

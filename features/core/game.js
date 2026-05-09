@@ -88,7 +88,9 @@ export const game = {
 
         const goRight = Math.random() > 0.5;
         duck.classList.add(goRight ? 'animate-right' : 'animate-left');
-        duck.style.left = goRight ? '-70px' : '100%';
+        // El recorrido depende del ancho del canvas — lo pasamos a la animación
+        // como variable CSS (la usan @keyframes moveRight/moveLeft).
+        duck.style.setProperty('--travel', `${canvas.offsetWidth + 80}px`);
 
         const baseSpeed = 5;
         const speed = baseSpeed / (levelConfig.speed * (isGolden ? 1.4 : 1));
@@ -217,6 +219,9 @@ function spawnScorePopup(canvas, x, y, points) {
 }
 
 function spawnFeathers(canvas, x, y, count = 6) {
+    const fragment = document.createDocumentFragment();
+    const feathers = [];
+
     for (let i = 0; i < count; i++) {
         const feather = document.createElement('div');
         feather.className = 'feather';
@@ -229,9 +234,12 @@ function spawnFeathers(canvas, x, y, count = 6) {
         feather.style.setProperty('--dy', `${Math.sin(angle) * dist + 25}px`);
         feather.style.setProperty('--rot', `${Math.random() * 720 - 360}deg`);
 
-        canvas.appendChild(feather);
-        setTimeout(() => feather.remove(), 1000);
+        fragment.appendChild(feather);
+        feathers.push(feather);
     }
+
+    canvas.appendChild(fragment);
+    setTimeout(() => feathers.forEach(f => f.remove()), 1000);
 }
 
 function triggerShake(canvas) {
